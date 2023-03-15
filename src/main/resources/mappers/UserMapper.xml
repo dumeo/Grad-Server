@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.grad.mapper.UserMapper">
+    <insert id="addUser" parameterType="User">
+        insert into user(username, password, email, community_name, avatar_url, email_valid, create_date)
+        values(#{username} ,#{password} ,#{email} ,#{communityName} ,#{avatarUrl} ,#{emailValid} ,#{createDate});
+    </insert>
+
+    <select id="selectUserById" resultType="User">
+        select * from user where uid=#{uid};
+    </select>
+
+    <select id="selectMaxUid" resultType="Integer">
+        select max(uid) from user;
+    </select>
+
+</mapper>
