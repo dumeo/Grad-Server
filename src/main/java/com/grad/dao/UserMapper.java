@@ -1,9 +1,7 @@
-package com.grad.mapper;
+package com.grad.dao;
 
 import com.grad.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
-
-import java.util.List;
 
 @Mapper
 public interface UserMapper {

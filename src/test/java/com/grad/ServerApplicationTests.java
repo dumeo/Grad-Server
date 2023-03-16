@@ -1,6 +1,6 @@
 package com.grad;
 
-import com.grad.mapper.UserMapper;
+import com.grad.dao.UserMapper;
 import com.grad.pojo.User;
 import jakarta.annotation.Resource;
 import org.junit.jupiter.api.Test;

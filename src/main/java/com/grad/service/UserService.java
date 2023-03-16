@@ -1,7 +1,6 @@
 package com.grad.service;
 
-
-import com.grad.dao.UserDao;
+import com.grad.dao.UserMapper;
 import com.grad.pojo.User;
 import com.grad.util.DefaultVals;
 import com.grad.util.HttpStatusCode;
@@ -16,12 +15,12 @@ import java.time.format.DateTimeFormatter;
 public class UserService {
 
     @Resource
-    UserDao userDao;
+    UserMapper userMapper;
 
     public RegisterRet registerUser(User user){
         padUser(user);
-        userDao.insertToUser(user);
-        int uid = userDao.getMaxUid();
+        userMapper.addUser(user);
+        int uid = userMapper.selectMaxUid();
         return new RegisterRet(uid, HttpStatusCode.REGISTER_SUCCESS, HttpStatusCode.MSG_REGISTER_SUCCESS);
     }
 
