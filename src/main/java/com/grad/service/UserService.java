@@ -20,7 +20,7 @@ public class UserService {
     public RegisterRet registerUser(User user){
         padUser(user);
         userMapper.addUser(user);
-        int uid = userMapper.selectMaxUid();
+        long uid = userMapper.selectMaxUid();
         return new RegisterRet(uid, HttpStatusCode.REGISTER_SUCCESS, HttpStatusCode.MSG_REGISTER_SUCCESS);
     }
 

@@ -10,7 +10,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class RegisterRet {
-    private int uid;
+    private long uid;
     private int statusCode;
     private String Msg;
 }

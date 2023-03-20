@@ -7,7 +7,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
 
     public void addUser(User user);
-    public User selectUserById(int uid);
-    public int selectMaxUid();
+    public User selectUserById(long uid);
+    public long selectMaxUid();
 
 }
