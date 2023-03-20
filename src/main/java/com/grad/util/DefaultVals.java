@@ -11,6 +11,5 @@ public class DefaultVals {
     public static Integer REGISTERING_SUCCESS = 2;
     public static Integer REGISTERING_FAILED = 3;
 
-    public static String BASE_URL = "http://192.168.1.101:8080/";
 
 }

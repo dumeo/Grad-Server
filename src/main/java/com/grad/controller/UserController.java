@@ -1,7 +1,5 @@
 package com.grad.controller;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import com.grad.pojo.User;
 import com.grad.service.UserService;
 import com.grad.ret.RegisterRet;
@@ -26,25 +24,12 @@ public class UserController {
         return JsonUtil.objectToJson(res);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
     @GetMapping("index")
     public String index(){
         cnt ++;
         System.out.println("get request:" + cnt);
         User user = new User(1,"李四", "gfdbfd", "22222@qq.com",
-                "武汉社区", "www.ss.com", 0, "2023-03-15 00:45:11");
+                "武汉社区", "三单元501", "www.ss.com", 0, "2023-03-15 00:45:11");
         return JsonUtil.objectToJson(user);
     }
 }
