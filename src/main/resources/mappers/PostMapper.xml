@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="com.grad.dao.PostMapper">
+    <select id="getPosts" resultType="Post">
+        select * from post_table where post_id > #{startId} order by #{sort} limit 0, #{count};
+    </select>
+
+    <insert id="addPost" parameterType="Post">
+        insert into post_table(uid, post_type, post_title, post_content, post_tag, view_times, post_date)
+        values(#{uid},#{postType}, #{postTitle},#{postContent},#{postTag},#{viewTimes},#{postDate});
+    </insert>
+
+</mapper>

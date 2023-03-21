@@ -14,7 +14,6 @@ import static java.lang.Thread.sleep;
 @RequestMapping("/user")
 @Slf4j
 public class UserController {
-    public static  int cnt = 0;
     @Resource
     UserService userService;
 
@@ -24,12 +23,4 @@ public class UserController {
         return JsonUtil.objectToJson(res);
     }
 
-    @GetMapping("index")
-    public String index(){
-        cnt ++;
-        System.out.println("get request:" + cnt);
-        User user = new User(1,"李四", "gfdbfd", "22222@qq.com",
-                "武汉社区", "三单元501", "www.ss.com", 0, "2023-03-15 00:45:11");
-        return JsonUtil.objectToJson(user);
-    }
 }

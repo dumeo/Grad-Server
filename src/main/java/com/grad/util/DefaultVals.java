@@ -10,6 +10,9 @@ public class DefaultVals {
     public static Integer REGISTERING = 1;
     public static Integer REGISTERING_SUCCESS = 2;
     public static Integer REGISTERING_FAILED = 3;
+    public static Integer POST_ITEM_COUNT = 20;
+    public static Integer POST_TYPE_TEXT = 0;
+    public static Integer POST_TYPE_IMG = 1;
 
 
 }
