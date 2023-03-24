@@ -26,11 +26,14 @@ public class PostService {
     @Resource
     ImageMapper imageMapper;
 
-    public List<PostItem> getPosts(long startId, String sort, int count){
-        List<Post> posts = postMapper.getPosts(startId, sort, count);
+    public List<PostItem> getPosts(long startId, String sort){
         List<PostItem> postItems = new ArrayList<>();
-        for(Post post : posts)
-            postItems.add(postToPostItem(post));
+        if(sort.equals("newest")){
+            List<Post> posts = postMapper.getPosts(startId, DefaultVals.SORT_NEWEST, DefaultVals.POST_ITEM_COUNT);
+            for(Post post : posts)
+                postItems.add(postToPostItem(post));
+        }
+
         return postItems;
     }
 

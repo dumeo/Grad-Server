@@ -1,5 +1,6 @@
 package com.grad.ret;
 
+import com.grad.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,7 +11,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 public class RegisterRet {
-    private long uid;
+    private User user;
     private int statusCode;
     private String Msg;
 }

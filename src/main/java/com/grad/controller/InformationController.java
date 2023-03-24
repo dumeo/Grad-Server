@@ -20,8 +20,8 @@ public class InformationController {
     PostService postService;
 
     @GetMapping("/posts")
-    public String getPosts(@PathParam("sort") String sort, @PathParam("startId") Integer startId){
-        List<PostItem> res = postService.getPosts(startId, sort, DefaultVals.POST_ITEM_COUNT);
+    public String getPosts(@PathParam("sort") String sort, @PathParam("startId") long startId){
+        List<PostItem> res = postService.getPosts(startId, sort);
         String json = JsonUtil.objectToJson(res);
         return json;
     }

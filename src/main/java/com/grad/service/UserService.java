@@ -18,18 +18,13 @@ public class UserService {
     UserMapper userMapper;
 
     public RegisterRet registerUser(User user){
-        padUser(user);
-        userMapper.addUser(user);
-        long uid = userMapper.selectMaxUid();
-        return new RegisterRet(uid, HttpStatusCode.REGISTER_SUCCESS, HttpStatusCode.MSG_REGISTER_SUCCESS);
-    }
-
-    public static void padUser(User user){
         String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
         user.setCreateDate(createDate);
-        user.setEmail(DefaultVals.DEFAULT_EMAIL);
         user.setAvatarUrl(DefaultVals.DEFAULT_AVATAR);
-        user.setEmailValid(DefaultVals.DEFAULT_EMAIL_VALID);
+        userMapper.addUser(user);
+        long uid = userMapper.selectMaxUid();
+        User RetUser = userMapper.selectUserById(uid);
+        return new RegisterRet(RetUser, HttpStatusCode.REGISTER_SUCCESS, HttpStatusCode.MSG_REGISTER_SUCCESS);
     }
 
 }

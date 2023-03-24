@@ -20,7 +20,9 @@ public class PostItem {
     public PostItem() {
     }
 
-    public PostItem(long postId,  long uid, long postType, String avatarUrl, String username, String userHouseAddr, List<String> imgUrl, String postTitle, String postContent, String postTag, long viewTimes, String postDate) {
+    public PostItem(long postId,  long uid, long postType, String avatarUrl, String username,
+                    String userHouseAddr, List<String> imgUrl, String postTitle,
+                    String postContent, String postTag, long viewTimes, String postDate) {
         this.postId = postId;
         this.postType = postType;
         this.uid = uid;
