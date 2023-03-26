@@ -13,7 +13,7 @@ import lombok.ToString;
 public class PostImage {
 
   private long imgId;
-  private long postId;
+  private String postId;
   private long imgOrder;
   private String url;
 
@@ -27,11 +27,11 @@ public class PostImage {
   }
 
 
-  public long getPostId() {
+  public String getPostId() {
     return postId;
   }
 
-  public void setPostId(long postId) {
+  public void setPostId(String postId) {
     this.postId = postId;
   }
 

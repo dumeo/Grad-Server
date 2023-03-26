@@ -9,5 +9,5 @@ import java.util.List;
 @Mapper
 public interface ImageMapper {
     public void addImage(PostImage image);
-    public List<PostImage> selectImagesByPostId(@Param("postId") long postId);
+    public List<PostImage> selectImagesByPostId(@Param("postId") String postId);
 }

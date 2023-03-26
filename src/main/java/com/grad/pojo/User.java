@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class User {
 
-  private long uid;
+  private String uid;
   private long utype;
   private String username;
   private String password;
@@ -20,23 +20,14 @@ public class User {
   private long emailValid;
   private String createDate;
 
-  public User(long utype, String username, String password, String email, String communityName, String houseAddr, String avatarUrl, long emailValid, String createDate) {
-    this.utype = utype;
-    this.username = username;
-    this.password = password;
-    this.email = email;
-    this.communityName = communityName;
-    this.houseAddr = houseAddr;
-    this.avatarUrl = avatarUrl;
-    this.emailValid = emailValid;
-    this.createDate = createDate;
-  }
 
-  public long getUid() {
+
+
+  public String getUid() {
     return uid;
   }
 
-  public void setUid(long uid) {
+  public void setUid(String uid) {
     this.uid = uid;
   }
 

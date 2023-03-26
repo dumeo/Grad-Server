@@ -5,13 +5,13 @@
 
 
 <mapper namespace="com.grad.dao.PostMapper">
-    <select id="getPosts" resultType="Post">
-        select * from post_table where post_id > #{startId} order by #{sort} limit 0, #{count};
+    <select id="getPostsByNewest" resultType="Post">
+        select * from post_table order by post_date desc limit 0, #{count};
     </select>
 
     <insert id="addPost" parameterType="Post">
-        insert into post_table(uid, post_type, post_title, post_content, post_tag, view_times, post_date)
-        values(#{uid},#{postType}, #{postTitle},#{postContent},#{postTag},#{viewTimes},#{postDate});
+        insert into post_table(post_id, uid, post_type, post_title, post_content, post_tag, view_times, post_date)
+        values(#{postId}, #{uid},#{postType}, #{postTitle},#{postContent},#{postTag},#{viewTimes},#{postDate});
     </insert>
 
 </mapper>

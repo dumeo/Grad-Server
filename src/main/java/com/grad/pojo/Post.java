@@ -12,8 +12,8 @@ import lombok.ToString;
 @ToString
 public class Post {
 
-  private long postId;
-  private long uid;
+  private String postId;
+  private String uid;
   private long postType;
   private String postTitle;
   private String postContent;
@@ -22,20 +22,20 @@ public class Post {
   private String postDate;
 
 
-  public long getPostId() {
+  public String getPostId() {
     return postId;
   }
 
-  public void setPostId(long postId) {
+  public void setPostId(String postId) {
     this.postId = postId;
   }
 
 
-  public long getUid() {
+  public String getUid() {
     return uid;
   }
 
-  public void setUid(long uid) {
+  public void setUid(String uid) {
     this.uid = uid;
   }
 

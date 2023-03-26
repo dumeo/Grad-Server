@@ -4,9 +4,9 @@ import java.util.List;
 
 public class PostItem {
 
-    private long postId;
+    private String postId;
     private long postType;
-    private long uid;
+    private String uid;
     private String avatarUrl; //
     private String username; //
     private String userHouseAddr; //
@@ -20,7 +20,7 @@ public class PostItem {
     public PostItem() {
     }
 
-    public PostItem(long postId,  long uid, long postType, String avatarUrl, String username,
+    public PostItem(String postId, String uid, long postType, String avatarUrl, String username,
                     String userHouseAddr, List<String> imgUrl, String postTitle,
                     String postContent, String postTag, long viewTimes, String postDate) {
         this.postId = postId;
@@ -77,20 +77,20 @@ public class PostItem {
         this.mediaUrl = mediaUrl;
     }
 
-    public long getPostId() {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId(long postId) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
 
-    public long getUid() {
+    public String getUid() {
         return uid;
     }
 
-    public void setUid(long uid) {
+    public void setUid(String uid) {
         this.uid = uid;
     }
 

@@ -5,6 +5,7 @@ import com.grad.pojo.User;
 import com.grad.util.DefaultVals;
 import com.grad.util.HttpStatusCode;
 import com.grad.ret.RegisterRet;
+import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 
@@ -19,10 +20,11 @@ public class UserService {
 
     public RegisterRet registerUser(User user){
         String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String uid = UUIDUtil.generateUUID();
+        user.setUid(uid);
         user.setCreateDate(createDate);
         user.setAvatarUrl(DefaultVals.DEFAULT_AVATAR);
         userMapper.addUser(user);
-        long uid = userMapper.selectMaxUid();
         User RetUser = userMapper.selectUserById(uid);
         return new RegisterRet(RetUser, HttpStatusCode.REGISTER_SUCCESS, HttpStatusCode.MSG_REGISTER_SUCCESS);
     }

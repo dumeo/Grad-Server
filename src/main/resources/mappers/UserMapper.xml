@@ -4,16 +4,13 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grad.dao.UserMapper">
     <insert id="addUser" parameterType="User">
-        insert into user(username, password,community_name, house_addr, avatar_url, create_date)
-        values(#{username} ,#{password} , #{communityName} , #{houseAddr}, #{avatarUrl} ,#{createDate});
+        insert into user(uid, username, password,community_name, house_addr, avatar_url, create_date)
+        values(#{uid}, #{username} ,#{password} , #{communityName} , #{houseAddr}, #{avatarUrl} ,#{createDate});
     </insert>
 
     <select id="selectUserById" resultType="User">
         select * from user where uid=#{uid};
     </select>
 
-    <select id="selectMaxUid" resultType="long">
-        select max(uid) from user;
-    </select>
 
 </mapper>
