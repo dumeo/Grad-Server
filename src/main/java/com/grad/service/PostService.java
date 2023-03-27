@@ -10,12 +10,20 @@ import com.grad.ret.PostItem;
 import com.grad.util.DefaultVals;
 import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;
+import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -77,5 +85,17 @@ public class PostService {
         for(PostImage postImage : postImages)
             images.add(postImage.getUrl());
         return images;
+    }
+
+    public String storeImage(MultipartHttpServletRequest request) throws IOException, ServletException {
+        log.info("fileName = " + request.getPart("file").getSubmittedFileName());
+        InputStream sin = request.getFile("file").getInputStream();
+        byte[] bytes = sin.readAllBytes();
+        log.info("content length:" + bytes.length);
+
+
+
+        sin.close();
+        return "{\"hello\":1}";
     }
 }
