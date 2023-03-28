@@ -14,4 +14,13 @@
         values(#{postId}, #{uid},#{postType}, #{postTitle},#{postContent},#{postTag},#{viewTimes},#{postDate});
     </insert>
 
+    <update id="setPostType">
+            update post_table set post_type=#{postType} where post_id=#{postId};
+    </update>
+
+    <select id="getMorePosts" resultType="Post">
+        select * from post_table where post_date &lt; #{startTime}
+        order by post_date desc limit #{count};
+    </select>
+
 </mapper>

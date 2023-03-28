@@ -1,20 +1,14 @@
 package com.grad.controller;
 
 import com.grad.pojo.Post;
-import com.grad.pojo.PostImage;
 import com.grad.ret.PostItem;
 import com.grad.service.PostService;
-import com.grad.util.DefaultVals;
 import com.grad.util.JsonUtil;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
-import jakarta.websocket.server.PathParam;
-import lombok.Builder;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.csource.common.MyException;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import java.io.IOException;
@@ -28,8 +22,13 @@ public class InformationController {
 
     @GetMapping("/posts")
     public String getPosts(){
-        List<PostItem> res = postService.getPosts();
-        String json = JsonUtil.objectToJson(res);
+        String json = postService.getPosts();
+        return json;
+    }
+
+    @GetMapping("/posts/load-more")
+    public String loadMorePosts(@RequestParam("startTime") String startTime){
+        String json = postService.loadMorePosts(startTime);
         return json;
     }
 
@@ -39,8 +38,7 @@ public class InformationController {
     }
 
     @PostMapping("/posts/new/upload-imgs")
-    public String uploadImages(MultipartHttpServletRequest request) throws ServletException, IOException {
-        log.info("get request!!");
+    public String uploadImages(MultipartHttpServletRequest request) throws ServletException, IOException, MyException {
         return postService.storeImage(request);
     }
 }

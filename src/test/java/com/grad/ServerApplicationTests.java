@@ -3,20 +3,13 @@ package com.grad;
 import com.grad.dao.ImageMapper;
 import com.grad.dao.PostMapper;
 import com.grad.dao.UserMapper;
-import com.grad.pojo.Post;
-import com.grad.pojo.PostImage;
-import com.grad.pojo.User;
 import com.grad.service.PostService;
-import com.grad.util.DefaultVals;
-import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.io.IOException;
-import java.util.List;
-import java.util.UUID;
 
 @SpringBootTest
 @Slf4j

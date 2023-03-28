@@ -7,16 +7,21 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class PostImage {
+public class ImageItem {
 
   private long imgId;
   private String postId;
   private long imgOrder;
   private String url;
 
+  public ImageItem(long imgId, String postId, long imgOrder, String url) {
+    this.imgId = imgId;
+    this.postId = postId;
+    this.imgOrder = imgOrder;
+    this.url = url;
+  }
 
   public long getImgId() {
     return imgId;

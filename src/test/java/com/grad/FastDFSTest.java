@@ -5,6 +5,8 @@ import org.csource.fastdfs.StorageClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.ArrayList;
+
 @SpringBootTest
 public class FastDFSTest {
 
@@ -32,7 +34,11 @@ public class FastDFSTest {
 //            e.printStackTrace();
 //        }
 
-
+//        ClassA classA = new ClassA(new ArrayList<>());
+//        classA.getListA().add(1);
+//        ClassB classB = new ClassB(classA.getListA());
+//        classB.getListB().set(0, 2);
+//        System.out.println(classA.getListA().get(0));
 
     }
 }
