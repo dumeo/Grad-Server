@@ -2,6 +2,7 @@ package com.grad.service;
 
 import com.grad.dao.UserMapper;
 import com.grad.pojo.User;
+import com.grad.util.DateUtil;
 import com.grad.util.DefaultVals;
 import com.grad.util.HttpStatusCode;
 import com.grad.ret.RegisterRet;
@@ -19,7 +20,7 @@ public class UserService {
     UserMapper userMapper;
 
     public RegisterRet registerUser(User user){
-        String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String createDate = DateUtil.generateDate();
         String uid = UUIDUtil.generateUUID();
         user.setUid(uid);
         user.setCreateDate(createDate);

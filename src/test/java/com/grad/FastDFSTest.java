@@ -1,19 +1,29 @@
 package com.grad;
 
+import com.grad.dao.ImageMapper;
+import jakarta.annotation.Resource;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.StorageClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 
 @SpringBootTest
 public class FastDFSTest {
 
     StorageClient client;
+    @Resource
+    ImageMapper imageMapper;
 
     @Test
-    void contextLoads() {
+    void contextLoads() throws IOException {
 
 //        try{
 //            //加载配置文件
@@ -34,11 +44,8 @@ public class FastDFSTest {
 //            e.printStackTrace();
 //        }
 
-//        ClassA classA = new ClassA(new ArrayList<>());
-//        classA.getListA().add(1);
-//        ClassB classB = new ClassB(classA.getListA());
-//        classB.getListB().set(0, 2);
-//        System.out.println(classA.getListA().get(0));
+
+
 
     }
 }

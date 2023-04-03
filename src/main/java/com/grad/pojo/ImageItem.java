@@ -15,12 +15,23 @@ public class ImageItem {
   private String postId;
   private long imgOrder;
   private String url;
+  private long width;
+  private long height;
 
   public ImageItem(long imgId, String postId, long imgOrder, String url) {
     this.imgId = imgId;
     this.postId = postId;
     this.imgOrder = imgOrder;
     this.url = url;
+  }
+
+  public ImageItem(long imgId, String postId, long imgOrder, String url, long width, long height) {
+    this.imgId = imgId;
+    this.postId = postId;
+    this.imgOrder = imgOrder;
+    this.url = url;
+    this.width = width;
+    this.height = height;
   }
 
   public long getImgId() {
@@ -58,5 +69,19 @@ public class ImageItem {
     this.url = url;
   }
 
+  public long getWidth() {
+    return width;
+  }
 
+  public void setWidth(long width) {
+    this.width = width;
+  }
+
+  public long getHeight() {
+    return height;
+  }
+
+  public void setHeight(long height) {
+    this.height = height;
+  }
 }

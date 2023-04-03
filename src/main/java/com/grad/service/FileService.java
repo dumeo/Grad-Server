@@ -16,7 +16,7 @@ public class FileService {
         client = new StorageClient();
     }
 
-    public String getFileAddr(String[] s){
+    public String generateFileUrl(String[] s){
         if(s == null || s.length == 0) return null;
         String res = "";
         for(int i = 1; i < s.length; i ++)

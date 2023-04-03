@@ -1,16 +1,16 @@
 package com.grad.service;
 
+import com.grad.dao.CommentMapper;
 import com.grad.dao.ImageMapper;
 import com.grad.dao.PostMapper;
 import com.grad.dao.UserMapper;
 import com.grad.pojo.Post;
 import com.grad.pojo.ImageItem;
 import com.grad.pojo.User;
+import com.grad.ret.CommentCntRet;
 import com.grad.ret.PostItem;
-import com.grad.util.DefaultVals;
-import com.grad.util.JsonUtil;
-import com.grad.util.StringTool;
-import com.grad.util.UUIDUtil;
+import com.grad.ret.PostUserInfo;
+import com.grad.util.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +18,9 @@ import org.csource.common.MyException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -36,6 +39,22 @@ public class PostService {
     ImageMapper imageMapper;
     @Resource
     FileService fileService;
+    @Resource
+    CommentMapper commentMapper;
+
+    public String getPostCommentCnt(String postId){
+        long commentCnt = commentMapper.getPostCommentCnt(postId);
+        CommentCntRet commentCntRet = new CommentCntRet(commentCnt);
+        return JsonUtil.objectToJson(commentCntRet);
+    }
+
+    public String getPostById(String postId){
+        Post post = postMapper.getPostById(postId);
+        PostItem postItem = postToPostItem(post);
+        List<ImageItem> imageItems = postItem.getImageItems();
+        return JsonUtil.objectToJson(postItem);
+    }
+
 
     public String getPosts(){
         List<PostItem> postItems = new ArrayList<>();
@@ -57,9 +76,8 @@ public class PostService {
 
 
     public String newPost(Post post){
-        log.info("post tag = " + post.getPostTag());
         post.setPostId(UUIDUtil.generateUUID());
-        String createDate = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        String createDate = DateUtil.generateDate();
         post.setPostDate(createDate);
         postMapper.addPost(post);
         return "{\"postId\":" + "\"" + post.getPostId() + "\"" + "}";
@@ -67,40 +85,19 @@ public class PostService {
 
 
 
-
-
-
-
-
-
-
     private PostItem postToPostItem(Post post){
         String postId = post.getPostId();
-
         String uid = post.getUid();
-        long postType = post.getPostType();
         User user = userMapper.selectUserById(uid);
-        List<String> mediaUrls = new ArrayList<>(); //mediaUrl有可能是图片类的url，也可能是视频类的url
-        if(postType == DefaultVals.POST_TYPE_IMG){
-            mediaUrls = getPostImages(postId);
-        }
-        PostItem res = new PostItem(postId, uid, post.getPostType(),
-                user.getAvatarUrl(),
-                user.getUsername(), user.getHouseAddr() ,
-                mediaUrls,post.getPostTitle(),
-                post.getPostContent(), post.getPostTag(),
-                post.getViewTimes(), post.getPostDate());
+        PostUserInfo postUserInfo = new PostUserInfo(user.getAvatarUrl(), user.getUsername(), user.getHouseAddr());
+        List<ImageItem> imageItems;
+        imageItems = imageMapper.selectImagesByPostId(postId);
+        PostItem res = new PostItem(post, postUserInfo, imageItems);
 
         return res;
     }
 
-    private List<String> getPostImages(String postId) {
-        List<ImageItem> imageItems = imageMapper.selectImagesByPostId(postId);
-        List<String> images = new ArrayList<>();
-        for(ImageItem imageItem : imageItems)
-            images.add(imageItem.getUrl());
-        return images;
-    }
+
 
     public String storeImage(MultipartHttpServletRequest request) throws IOException, ServletException, MyException {
         String fileName = request.getPart("file").getSubmittedFileName();
@@ -108,12 +105,21 @@ public class PostService {
         long imgOrder = Integer.parseInt(StringTool.parseOrder(fileName));
         log.info("posId = " + postId + "\nimageOrder = " + imgOrder);
         String extName = fileName.substring(fileName.lastIndexOf('.') + 1);
-        InputStream sin = request.getFile("file").getInputStream();
-        String[] fileAddr = fileService.client.upload_file(sin.readAllBytes(), extName, null);
-        sin.close();
-        String fileUrl = fileService.getFileAddr(fileAddr);
-        imageMapper.addImage(new ImageItem(1, postId, imgOrder, fileUrl));
+        InputStream ins = request.getFile("file").getInputStream();
+
+        byte[] bytes = ins.readAllBytes();
+        InputStream inputStream = new ByteArrayInputStream(bytes);
+        BufferedImage sourceImg = ImageIO.read(inputStream);
+        long width = sourceImg.getWidth();   // 源图宽度
+        long height = sourceImg.getHeight();   // 源图高度
+
+        String[] fileAddr = fileService.client.upload_file(bytes, extName, null);
+        String fileUrl = fileService.generateFileUrl(fileAddr);
+        imageMapper.addImage(new ImageItem(1, postId, imgOrder, fileUrl, width, height));
         postMapper.setPostType(postId, DefaultVals.POST_TYPE_IMG);
-        return "{\"hello\":1}";
+        ins.close();
+        inputStream.close();
+        return "{\"status\":\"upload success\"}";
     }
+
 }

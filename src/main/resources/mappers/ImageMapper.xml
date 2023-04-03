@@ -7,12 +7,20 @@
 <mapper namespace="com.grad.dao.ImageMapper">
 
     <insert id="addImage" parameterType="ImageItem">
-        insert into img_table(post_id, img_order, url)
-        values(#{postId}, #{imgOrder}, #{url});
+        insert into img_table(post_id, img_order, url, width, height)
+        values(#{postId}, #{imgOrder}, #{url}, #{width}, #{height});
     </insert>
 
     <select id="selectImagesByPostId" resultType="ImageItem">
         select * from img_table where post_id=#{postId} order by img_order;
     </select>
+
+    <select id="getImgUrls" resultType="ImageItem">
+        select * from img_table where img_id &lt; 100;
+    </select>
+
+    <update id="updateImgSize">
+        update img_table set width = #{width}, height = #{height} where img_id = #{imgId};
+    </update>
 
 </mapper>

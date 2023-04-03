@@ -12,4 +12,5 @@ public interface PostMapper {
     public void addPost(Post post);
     public void setPostType(@Param("postId") String postId, @Param("postType") long postType);
     public List<Post> getMorePosts(@Param("startTime") String startTime, @Param("count") Integer count);
+    public Post getPostById(@Param("postId")String postId);
 }
