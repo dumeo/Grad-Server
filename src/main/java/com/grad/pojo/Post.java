@@ -20,7 +20,7 @@ public class Post {
   private String postTag;
   private long viewTimes;
   private String postDate;
-
+  private long likeCnt;
 
   public String getPostId() {
     return postId;
@@ -92,6 +92,12 @@ public class Post {
   public void setPostDate(String postDate) {
     this.postDate = postDate;
   }
+  public long getLikeCnt() {
+    return likeCnt;
+  }
 
+  public void setLikeCnt(long likeCnt) {
+    this.likeCnt = likeCnt;
+  }
 
 }

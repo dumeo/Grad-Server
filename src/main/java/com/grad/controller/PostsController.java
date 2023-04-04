@@ -34,6 +34,7 @@ public class PostsController {
 
     @GetMapping("/post/{postId}/comment-cnt")
     public String getPostCommentCnt(@PathVariable("postId")String postId){
+        log.info("cnt get id:" + postId);
         String json = postService.getPostCommentCnt(postId);
         return json;
     }

@@ -44,6 +44,7 @@ public class PostService {
 
     public String getPostCommentCnt(String postId){
         long commentCnt = commentMapper.getPostCommentCnt(postId);
+        log.info("cnt = " + commentCnt);
         CommentCntRet commentCntRet = new CommentCntRet(commentCnt);
         return JsonUtil.objectToJson(commentCntRet);
     }

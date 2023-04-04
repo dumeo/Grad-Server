@@ -12,4 +12,5 @@ public interface CommentMapper {
     public void addComment(Comment comment);
     public List<Comment> getCommentsByTime(@Param("postId") String postId);
     public long getPostCommentCnt(@Param("postId")String postId);
+    public Comment getCommentById(@Param("commentId")String commentId);
 }

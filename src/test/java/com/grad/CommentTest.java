@@ -3,6 +3,7 @@ package com.grad;
 import com.grad.dao.CommentMapper;
 import com.grad.dao.PostMapper;
 import com.grad.pojo.Comment;
+import com.grad.service.CommentService;
 import com.grad.service.PostService;
 import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;
@@ -16,6 +17,8 @@ import java.util.List;
 public class CommentTest {
     @Resource
     CommentMapper commentMapper;
+    @Resource
+    CommentService commentService;
 
 
     @Test
@@ -28,6 +31,8 @@ public class CommentTest {
 //        for(Comment comm : comments){
 //            System.out.println(comm);
 //        }
+
+//        String res = commentService.getCommentsByPostId("81ada435621f40d2bf6eadbd7cb50303");
 
     }
 }
