@@ -1,7 +1,10 @@
 package com.grad.controller;
 
 import com.grad.pojo.Post;
+import com.grad.ret.Status;
 import com.grad.service.PostService;
+import com.grad.util.DefaultVals;
+import com.grad.util.JsonUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +16,10 @@ public class PostsController {
     @Resource
     PostService postService;
 
-    @GetMapping("/post/{postId}")
-    public String getPostById(@PathVariable("postId")String postId){
-        return postService.getPostById(postId);
+
+    @GetMapping("/post")
+    public String getPostById(@RequestParam("clientUid")String clientUid, @RequestParam("postId")String postId){
+        return postService.getPostById(clientUid, postId);
     }
 
 
@@ -34,13 +38,10 @@ public class PostsController {
 
     @GetMapping("/post/{postId}/comment-cnt")
     public String getPostCommentCnt(@PathVariable("postId")String postId){
-        log.info("cnt get id:" + postId);
+//        log.info("cnt get id:" + postId);
         String json = postService.getPostCommentCnt(postId);
         return json;
     }
-
-
-
 
     @PostMapping("/post/new")
     public String newPost(@RequestBody Post post){
@@ -53,9 +54,13 @@ public class PostsController {
             return postService.storeImage(request);
         }catch (Exception e){
             e.printStackTrace();
-            return "{\"status\":\"upload failed\"}";
+            return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));
         }
-
-
     }
+
+    @PostMapping("/post/like")
+    public String setLikeStatus(@RequestParam("uid")String uid, @RequestParam("postId")String postId, @RequestParam("transferType")int transferType){
+        return postService.setLikeStatus(uid, postId, transferType);
+    }
+
 }

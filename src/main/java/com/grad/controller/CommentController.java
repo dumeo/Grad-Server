@@ -14,14 +14,21 @@ public class CommentController {
     @Resource
     CommentService commentService;
 
+
+
     @PostMapping("/comment/add")
     public String addComment(@RequestBody Comment comment){
         return commentService.addComment(comment);
     }
 
-    @GetMapping("/comment/{postId}")
-    public String getComments(@PathVariable("postId")String postId){
-        return commentService.getCommentsByPostId(postId);
+    @GetMapping("/comments")
+    public String getComments(@RequestParam("clientUid")String clientUid, @RequestParam("postId")String postId){
+        return commentService.getCommentsByPostId(clientUid, postId);
+    }
+
+    @PostMapping("/comment/like")
+    public String setLikeStatus(@RequestParam("uid")String uid, @RequestParam("commentId")String commentId, @RequestParam("transferType")int transferType){
+        return commentService.setLikeStatus(uid, commentId, transferType);
     }
 
 }

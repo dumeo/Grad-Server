@@ -23,5 +23,27 @@
     <select id="getPostCommentCnt" resultType="long">
         select count(*) from comment_table where post_id=#{postId};
     </select>
+<!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
+    <select id="checkLikeStatus" resultType="Object">
+        select like_status from user_like_comment where uid=#{uid} and comment_id=#{commentId};
+    </select>
+
+    <update id="increaseCommentLikeCnt">
+        update comment_table set like_cnt = like_cnt + #{cnt} where comment_id = #{commentId};
+    </update>
+
+    <update id="setUserLikeStatus">
+        update user_like_comment set like_status = #{likeStatus}
+        where uid = #{uid} and comment_id = #{commentId};
+    </update>
+
+    <insert id="addUserLikeStatus">
+        insert into user_like_comment(uid, comment_id, like_status)
+        values(#{uid}, #{commentId}, #{likeStatus});
+    </insert>
+
+    <delete id="deleteUserLikeStatus">
+        delete from user_like_comment where uid = #{uid} and comment_id = #{commentId};
+    </delete>
 
 </mapper>

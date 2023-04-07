@@ -13,4 +13,10 @@ public interface CommentMapper {
     public List<Comment> getCommentsByTime(@Param("postId") String postId);
     public long getPostCommentCnt(@Param("postId")String postId);
     public Comment getCommentById(@Param("commentId")String commentId);
+
+    public Object checkLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId);
+    public void increaseCommentLikeCnt(@Param("commentId")String commentId, @Param("cnt")int cnt);
+    public void setUserLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId, @Param("likeStatus")int likeStatus);
+    public void addUserLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId, @Param("likeStatus")int likeStatus);
+    public void deleteUserLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId);
 }

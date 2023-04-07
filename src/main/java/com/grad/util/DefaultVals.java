@@ -15,4 +15,19 @@ public class DefaultVals {
     public static Integer POST_TYPE_IMG = 1;
     public static final String SORT_NEWEST = "post_date";
 
+    public static final String STATUS_OK = "ok";
+    public static final String STATUS_FAILED = "failed";
+
+    public static final int LIKE_STATUS_DISLIKED = 0;
+    public static final int LIKE_STATUS_LIKED = 1;
+    public static final int LIKE_STATUS_NOSTATUS = 2;
+
+    public static final int LIKED_TO_DISLIKE = 50;
+    public static final int DISLIKED_TO_LIKE = 51;
+    public static final int LIKED_TO_NOSTATUS = 52;
+    public static final int DISLIKED_TO_NOSTATUS = 53;
+    public static final int NOSTATUS_TO_DISLIKE = 54;
+    public static final int NOSTATUS_TO_LIKE = 55;
+
+
 }

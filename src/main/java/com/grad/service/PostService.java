@@ -4,17 +4,16 @@ import com.grad.dao.CommentMapper;
 import com.grad.dao.ImageMapper;
 import com.grad.dao.PostMapper;
 import com.grad.dao.UserMapper;
+import com.grad.ret.*;
 import com.grad.pojo.Post;
 import com.grad.pojo.ImageItem;
 import com.grad.pojo.User;
-import com.grad.ret.CommentCntRet;
-import com.grad.ret.PostItem;
-import com.grad.ret.PostUserInfo;
 import com.grad.util.*;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.csource.common.MyException;
+import org.hibernate.dialect.identity.DB2390IdentityColumnSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -23,8 +22,6 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,17 +39,26 @@ public class PostService {
     @Resource
     CommentMapper commentMapper;
 
+
+
     public String getPostCommentCnt(String postId){
         long commentCnt = commentMapper.getPostCommentCnt(postId);
-        log.info("cnt = " + commentCnt);
         CommentCntRet commentCntRet = new CommentCntRet(commentCnt);
         return JsonUtil.objectToJson(commentCntRet);
     }
 
-    public String getPostById(String postId){
+    public String getPostById(String clientUid, String postId){
         Post post = postMapper.getPostById(postId);
         PostItem postItem = postToPostItem(post);
-        List<ImageItem> imageItems = postItem.getImageItems();
+        Object likeStatus = postMapper.checkLikeStatus(clientUid, postId);
+        ClientToThisInfo clientToThisInfo = new ClientToThisInfo();
+        if(likeStatus != null) clientToThisInfo.setLikeStatus((int)(long)likeStatus);
+        else clientToThisInfo.setLikeStatus(DefaultVals.LIKE_STATUS_NOSTATUS);
+        postItem.setClientToThisInfo(clientToThisInfo);
+        PostInfo postInfo = new PostInfo();
+        long commentCnt = commentMapper.getPostCommentCnt(postId);
+        postInfo.setCommentCnt(commentCnt);
+        postItem.setPostInfo(postInfo);
         return JsonUtil.objectToJson(postItem);
     }
 
@@ -104,7 +110,7 @@ public class PostService {
         String fileName = request.getPart("file").getSubmittedFileName();
         String postId = StringTool.parsePostId(fileName);
         long imgOrder = Integer.parseInt(StringTool.parseOrder(fileName));
-        log.info("posId = " + postId + "\nimageOrder = " + imgOrder);
+//        log.info("posId = " + postId + "\nimageOrder = " + imgOrder);
         String extName = fileName.substring(fileName.lastIndexOf('.') + 1);
         InputStream ins = request.getFile("file").getInputStream();
 
@@ -120,7 +126,41 @@ public class PostService {
         postMapper.setPostType(postId, DefaultVals.POST_TYPE_IMG);
         ins.close();
         inputStream.close();
-        return "{\"status\":\"upload success\"}";
+        return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
     }
 
+    public String setLikeStatus(String uid, String postId, int transferType) {
+
+        try{
+            if(transferType == DefaultVals.LIKED_TO_DISLIKE){
+                postMapper.increasePostLikeCnt(postId, -2);
+                postMapper.setUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_DISLIKED);
+            }
+            else if(transferType == DefaultVals.DISLIKED_TO_LIKE){
+                postMapper.increasePostLikeCnt( postId, 2);
+                postMapper.setUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_LIKED);
+            }
+            else if(transferType == DefaultVals.LIKED_TO_NOSTATUS){
+                postMapper.increasePostLikeCnt(postId, -1);
+                postMapper.deleteUserLikeStatus(uid, postId);
+            }
+            else if(transferType == DefaultVals.DISLIKED_TO_NOSTATUS){
+                postMapper.increasePostLikeCnt(postId, 1);
+                postMapper.deleteUserLikeStatus(uid, postId);
+            }
+            else if(transferType == DefaultVals.NOSTATUS_TO_DISLIKE){
+                postMapper.increasePostLikeCnt(postId, -1);
+                postMapper.addUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_DISLIKED);
+            }
+            else if(transferType == DefaultVals.NOSTATUS_TO_LIKE){
+                postMapper.increasePostLikeCnt(postId, 1);
+                postMapper.addUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_LIKED);
+            }
+
+            return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));
+        }
+    }
 }

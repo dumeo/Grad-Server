@@ -27,4 +27,26 @@
         select * from post_table where post_id=#{postId};
     </select>
 
+    <select id="checkLikeStatus" resultType="Object">
+        select like_status from user_like_post where uid=#{uid} and post_id=#{postId};
+    </select>
+
+    <update id="increasePostLikeCnt">
+        update post_table set like_cnt = like_cnt + #{cnt} where post_id = #{postId};
+    </update>
+
+    <update id="setUserLikeStatus">
+        update user_like_post set like_status = #{likeStatus}
+        where uid = #{uid} and post_id = #{postId};
+    </update>
+
+    <insert id="addUserLikeStatus">
+        insert into user_like_post(uid, post_id, like_status)
+        values(#{uid}, #{postId}, #{likeStatus});
+    </insert>
+
+    <delete id="deleteUserLikeStatus">
+        delete from user_like_post where uid = #{uid} and post_id = #{postId};
+    </delete>
+
 </mapper>

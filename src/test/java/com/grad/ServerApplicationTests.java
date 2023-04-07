@@ -32,7 +32,6 @@ class ServerApplicationTests {
 //                "武汉社区", "三单元501", "www.ss.com", 0, "2023-03-15 00:45:11"));
 //        User user = userMapper.selectUserById("gsdgdrfher");
 //        System.out.println("get user from mybatis:" + user.toString());
-
     }
 
     @Test
