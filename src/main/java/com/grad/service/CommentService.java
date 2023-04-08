@@ -105,7 +105,7 @@ public class CommentService {
     private ClientToThisInfo generateClientToThisInfo(String uid, String commentId){
         int likeStatus = -1;
         Object object = commentMapper.checkLikeStatus(uid, commentId);
-        if(object != null) likeStatus = (int) object;
+        if(object != null) likeStatus = (int)(long) object;
         else likeStatus = DefaultVals.LIKE_STATUS_NOSTATUS;
         ClientToThisInfo clientToThisInfo = new ClientToThisInfo();
         clientToThisInfo.setLikeStatus(likeStatus);
