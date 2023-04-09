@@ -60,7 +60,21 @@ public class PostsController {
 
     @PostMapping("/post/like")
     public String setLikeStatus(@RequestParam("uid")String uid, @RequestParam("postId")String postId, @RequestParam("transferType")int transferType){
+        try {
         return postService.setLikeStatus(uid, postId, transferType);
+        }catch (Exception e){
+            return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));
+        }
+    }
+
+    @PostMapping("/post/collect/add")
+    public String addCollect(@RequestParam("uid")String uid, @RequestParam("postId")String postId, @RequestParam("collectType")int collectType){
+        try {
+            return postService.addCollect(uid, postId, collectType);
+        }catch (Exception e){
+            e.printStackTrace();
+            return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));
+        }
     }
 
 }

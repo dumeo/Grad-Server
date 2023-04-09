@@ -29,5 +29,10 @@ public class DefaultVals {
     public static final int NOSTATUS_TO_DISLIKE = 54;
     public static final int NOSTATUS_TO_LIKE = 55;
 
+    public static final int COLLECT_POST = 62;
+    public static final String MSG_USER_NOT_EXISTS = "User not exists";
+    public static final String MSG_USER_EXISTS = "User exists";
+    public static final String MSG_SERVER_ERROR = "Server error";
+
 
 }

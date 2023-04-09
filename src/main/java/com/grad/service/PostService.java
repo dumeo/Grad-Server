@@ -1,9 +1,6 @@
 package com.grad.service;
 
-import com.grad.dao.CommentMapper;
-import com.grad.dao.ImageMapper;
-import com.grad.dao.PostMapper;
-import com.grad.dao.UserMapper;
+import com.grad.dao.*;
 import com.grad.ret.*;
 import com.grad.pojo.Post;
 import com.grad.pojo.ImageItem;
@@ -13,7 +10,6 @@ import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
 import org.csource.common.MyException;
-import org.hibernate.dialect.identity.DB2390IdentityColumnSupport;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 
@@ -38,6 +34,8 @@ public class PostService {
     FileService fileService;
     @Resource
     CommentMapper commentMapper;
+    @Resource
+    CollectMapper collectMapper;
 
 
 
@@ -50,16 +48,24 @@ public class PostService {
     public String getPostById(String clientUid, String postId){
         Post post = postMapper.getPostById(postId);
         PostItem postItem = postToPostItem(post);
-        Object likeStatus = postMapper.checkLikeStatus(clientUid, postId);
-        ClientToThisInfo clientToThisInfo = new ClientToThisInfo();
-        if(likeStatus != null) clientToThisInfo.setLikeStatus((int)(long)likeStatus);
-        else clientToThisInfo.setLikeStatus(DefaultVals.LIKE_STATUS_NOSTATUS);
+        ClientToThisInfo clientToThisInfo = generateClientToThisInfo(clientUid, postId);
         postItem.setClientToThisInfo(clientToThisInfo);
         PostInfo postInfo = new PostInfo();
         long commentCnt = commentMapper.getPostCommentCnt(postId);
         postInfo.setCommentCnt(commentCnt);
         postItem.setPostInfo(postInfo);
         return JsonUtil.objectToJson(postItem);
+    }
+
+    private ClientToThisInfo generateClientToThisInfo(String clientUid, String postId){
+        Object likeStatus = postMapper.checkLikeStatus(clientUid, postId);
+        ClientToThisInfo clientToThisInfo = new ClientToThisInfo();
+        if(likeStatus != null) clientToThisInfo.setLikeStatus((int)(long)likeStatus);
+        else clientToThisInfo.setLikeStatus(DefaultVals.LIKE_STATUS_NOSTATUS);
+        Object isCollected = collectMapper.checkIsCollected(clientUid, postId);
+        if(isCollected == null) clientToThisInfo.setCollected(false);
+        else clientToThisInfo.setCollected(true);
+        return clientToThisInfo;
     }
 
 
@@ -95,7 +101,7 @@ public class PostService {
     private PostItem postToPostItem(Post post){
         String postId = post.getPostId();
         String uid = post.getUid();
-        User user = userMapper.selectUserById(uid);
+        User user = userMapper.getUserById(uid);
         PostUserInfo postUserInfo = new PostUserInfo(user.getAvatarUrl(), user.getUsername(), user.getHouseAddr());
         List<ImageItem> imageItems;
         imageItems = imageMapper.selectImagesByPostId(postId);
@@ -129,9 +135,8 @@ public class PostService {
         return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
     }
 
-    public String setLikeStatus(String uid, String postId, int transferType) {
+    public String setLikeStatus(String uid, String postId, int transferType) throws Exception {
 
-        try{
             if(transferType == DefaultVals.LIKED_TO_DISLIKE){
                 postMapper.increasePostLikeCnt(postId, -2);
                 postMapper.setUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_DISLIKED);
@@ -156,11 +161,14 @@ public class PostService {
                 postMapper.increasePostLikeCnt(postId, 1);
                 postMapper.addUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_LIKED);
             }
-
             return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
-        }catch (Exception e){
-            e.printStackTrace();
-            return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));
-        }
+    }
+
+    public String addCollect(String uid, String postId, int collectType) throws Exception {
+        if(collectType == DefaultVals.COLLECT_POST)
+            collectMapper.addCollect(uid, postId);
+        else collectMapper.deleteCollect(uid, postId);
+        return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
+
     }
 }

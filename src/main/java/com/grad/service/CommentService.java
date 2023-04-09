@@ -49,7 +49,7 @@ public class CommentService {
         List<CommentItem> commentItems = new ArrayList<>();
         for(Comment comment : commentList){
             String uid = comment.getUid();
-            User user = userMapper.selectUserById(uid);
+            User user = userMapper.getUserById(uid);
             commentItems.add(new CommentItem(comment, user));
         }
 
@@ -67,7 +67,7 @@ public class CommentService {
 
         for(Comment comment : level0Comments){
             String uid = comment.getUid();
-            User user = userMapper.selectUserById(uid);
+            User user = userMapper.getUserById(uid);
             CommentItem commentItem = new CommentItem(comment, user);
             buildSubCommentTree(clientUid, commentItem, commentList);
             res.add(commentItem);
@@ -83,7 +83,7 @@ public class CommentService {
         for(Comment comment : commentList){
             if(comment.getFatherId() != null && comment.getFatherId().equals(father.getCommentId())){
                 String uid = comment.getUid();
-                User user = userMapper.selectUserById(uid);
+                User user = userMapper.getUserById(uid);
                 CommentItem childCommentItem = new CommentItem(comment, user);
                 buildSubCommentTree(clientUid, childCommentItem, commentList);
                 if(childCommentItem.getClientToThisInfo() == null){

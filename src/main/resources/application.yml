@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: wjj
-    url: jdbc:mysql://192.168.1.104:3306/grad?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://192.168.1.105:3306/grad?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
   servlet:
     multipart:

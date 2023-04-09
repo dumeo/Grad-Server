@@ -8,7 +8,7 @@
         values(#{uid}, #{username} ,#{password} , #{communityName} , #{houseAddr}, #{avatarUrl} ,#{createDate});
     </insert>
 
-    <select id="selectUserById" resultType="User">
+    <select id="getUserById" resultType="User">
         select * from user where uid=#{uid};
     </select>
 

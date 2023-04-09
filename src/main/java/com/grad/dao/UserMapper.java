@@ -7,6 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 public interface UserMapper {
 
     public void addUser(User user);
-    public User selectUserById(String uid);
+    public User getUserById(String uid);
 
 }

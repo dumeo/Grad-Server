@@ -13,19 +13,19 @@ public class Status {
         this.msg = msg;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
     public String getStatus() {
         return status;
     }
 
-    public String getMsg() {
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public Object getMsg() {
         return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
     }
 }
