@@ -10,7 +10,9 @@ public class VoteItem {
     private User user;
     private ClientToVoteInfo clientToThisInfo;
     private List<VoteOption> voteOptions;
-    private int voteCnt = -1;
+    private int voteCnt = 0;
+    private String Status;
+    private String endTime;
 
     public VoteItem() {
     }
@@ -60,5 +62,33 @@ public class VoteItem {
 
     public void setVoteCnt(int voteCnt) {
         this.voteCnt = voteCnt;
+    }
+
+    public String getStatus() {
+        return Status;
+    }
+
+    public void setStatus(String status) {
+        Status = status;
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime;
+    }
+
+    @Override
+    public String toString() {
+        return "VoteItem{" +
+                "post=" + post +
+                ", user=" + user +
+                ", clientToThisInfo=" + clientToThisInfo +
+                ", voteOptions=" + voteOptions +
+                ", voteCnt=" + voteCnt +
+                ", Status='" + Status + '\'' +
+                '}';
     }
 }

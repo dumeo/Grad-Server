@@ -8,7 +8,7 @@ import com.grad.pojo.User;
 import com.grad.ret.ClientToThisInfo;
 import com.grad.ret.Status;
 import com.grad.util.DateUtil;
-import com.grad.util.DefaultVals;
+import com.grad.constants.DefaultVals;
 import com.grad.util.JsonUtil;
 import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;

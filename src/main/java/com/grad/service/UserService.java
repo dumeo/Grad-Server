@@ -1,13 +1,12 @@
 package com.grad.service;
 
+import com.grad.constants.DefaultVals;
 import com.grad.dao.UserMapper;
 import com.grad.pojo.User;
 import com.grad.ret.Status;
 import com.grad.util.*;
 import com.grad.ret.RegisterRet;
 import jakarta.annotation.Resource;
-import org.hibernate.dialect.identity.DB2390IdentityColumnSupport;
-import org.springframework.http.converter.json.Jackson2ObjectMapperFactoryBean;
 import org.springframework.stereotype.Service;
 
 @Service

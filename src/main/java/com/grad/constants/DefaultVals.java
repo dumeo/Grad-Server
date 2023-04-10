@@ -1,4 +1,4 @@
-package com.grad.util;
+package com.grad.constants;
 
 public class DefaultVals {
     public static String DEFAULT_EMAIL = "EMPTY";
@@ -13,6 +13,7 @@ public class DefaultVals {
     public static Integer POST_ITEM_COUNT = 20;
     public static Integer POST_TYPE_TEXT = 0;
     public static Integer POST_TYPE_IMG = 1;
+    public static Integer POST_TYPE_VOTE = 2;
     public static final String SORT_NEWEST = "post_date";
 
     public static final String STATUS_OK = "ok";

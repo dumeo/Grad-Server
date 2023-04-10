@@ -1,5 +1,6 @@
 package com.grad.service;
 
+import com.grad.constants.DefaultVals;
 import com.grad.dao.*;
 import com.grad.ret.*;
 import com.grad.pojo.Post;
@@ -88,7 +89,7 @@ public class PostService {
     }
 
 
-    public String newPost(Post post){
+    public String addPost(Post post){
         post.setPostId(UUIDUtil.generateUUID());
         String createDate = DateUtil.generateDate();
         post.setPostDate(createDate);

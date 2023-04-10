@@ -1,6 +1,6 @@
 package com.grad.service;
 
-import com.grad.util.DefaultVals;
+import com.grad.constants.DefaultVals;
 import org.csource.common.MyException;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.StorageClient;

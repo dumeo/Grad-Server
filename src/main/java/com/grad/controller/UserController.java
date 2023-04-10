@@ -4,7 +4,7 @@ import com.grad.pojo.User;
 import com.grad.ret.Status;
 import com.grad.service.UserService;
 import com.grad.ret.RegisterRet;
-import com.grad.util.DefaultVals;
+import com.grad.constants.DefaultVals;
 import com.grad.util.JsonUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;

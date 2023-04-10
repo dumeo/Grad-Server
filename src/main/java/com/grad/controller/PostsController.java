@@ -3,7 +3,7 @@ package com.grad.controller;
 import com.grad.pojo.Post;
 import com.grad.ret.Status;
 import com.grad.service.PostService;
-import com.grad.util.DefaultVals;
+import com.grad.constants.DefaultVals;
 import com.grad.util.JsonUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class PostsController {
 
     @PostMapping("/post/new")
     public String newPost(@RequestBody Post post){
-        return postService.newPost(post);
+        return postService.addPost(post);
     }
 
     @PostMapping("/post/new/upload-imgs")

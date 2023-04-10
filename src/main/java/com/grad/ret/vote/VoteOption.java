@@ -7,7 +7,7 @@ public class VoteOption {
   private String postId;
   private String optionContent;
   private long optionOrder;
-  private long cnt;
+  private long cnt = 0;
 
   public VoteOption(String optionId, String postId, String optionContent, long optionOrder, long cnt) {
     this.optionId = optionId;

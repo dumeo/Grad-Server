@@ -31,7 +31,7 @@ public class DateUtil {
         d2 = (Date) format.parse(date2);
         //毫秒ms
         long diff = d2.getTime() - d1.getTime();
-        long diffSeconds = diff / 1000 % 60;
-        return diff;
+        long diffHours = diff / (60 * 60 * 1000) % 24;
+        return diffHours < 12 ? 12 : diffHours;
     }
 }
