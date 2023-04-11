@@ -4,9 +4,37 @@
         "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.grad.dao.VoteMapper">
     <insert id="addVoteOption">
-        insert into vote_option(option_id, post_id, option_content, option_order, cnt)
-        values(#{optionId}, #{postId}, #{optionContent}, #{optionOrder}, #{cnt});
+        insert into vote_option(option_id, vote_id, option_content, option_order, cnt)
+        values(#{optionId}, #{voteId}, #{optionContent}, #{optionOrder}, #{cnt});
+    </insert>
+    <insert id="addVote">
+        insert into vote_table(
+        vote_id,
+        uid,
+        vote_type,
+        vote_title,
+        vote_content,
+        vote_tag,
+        view_times,
+        vote_cnt,
+        vote_status,
+        create_date,
+        end_date)
+        values(#{voteId}, #{uid}, #{voteType}, #{voteTitle}, #{voteContent}, #{voteTag}, #{viewTimes}, #{voteCnt}, #{voteStatus}, #{createDate}, #{endDate});
     </insert>
 
+    <select id="getVoteOptionsByVoteId" resultType="com.grad.ret.vote.VoteOption">
+        select * from vote_option where vote_id = #{voteId} order by option_order;
+    </select>
+    <select id="getVoteByNewest" resultType="com.grad.ret.vote.Vote">
+        select * from vote_table order by create_date desc limit 0, #{cnt};
+    </select>
+    <select id="getMoreVotes" resultType="com.grad.ret.vote.Vote">
+        select * from vote_table where create_date &lt; #{createDate} order by create_date desc limit 0, #{cnt};
+    </select>
+
+    <select id="getVoteById" resultType="com.grad.ret.vote.Vote">
+        select * from vote_table where vote_id = #{voteId};
+    </select>
 
 </mapper>

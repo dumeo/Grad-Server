@@ -1,14 +1,17 @@
 package com.grad.util;
 
+import lombok.extern.slf4j.Slf4j;
+
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+@Slf4j
 public class DateUtil {
 
-    public static Integer StringToTimestamp(String time){
+    public static long StringToTimestamp(String time){
 
         int times = -1;
         try {
@@ -25,13 +28,9 @@ public class DateUtil {
     }
 
     public static long getDateInter(String date1, String date2) throws Exception{
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date d1 = null, d2 = null;
-        d1 = (Date) format.parse(date1);
-        d2 = (Date) format.parse(date2);
-        //毫秒ms
-        long diff = d2.getTime() - d1.getTime();
-        long diffHours = diff / (60 * 60 * 1000) % 24;
-        return diffHours < 12 ? 12 : diffHours;
+        long x1 = StringToTimestamp(date1), x2 = StringToTimestamp(date2);
+        long diff = x2 - x1;
+        long diffHours = diff / (60 * 60);
+        return diffHours < 1 ? 1 : diffHours;
     }
 }

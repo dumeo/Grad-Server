@@ -1,6 +1,9 @@
 package com.grad.constants;
 
 public class DefaultVals {
+    public static final int HTTP_CODE_OK = 200;
+    public static final int HTTP_CODE_SERVER_ERROR = 500;
+    public static final int HTTP_CODE_CLIENT_ERROR = 400;
     public static String DEFAULT_EMAIL = "EMPTY";
     public static String DEFAULT_AVATAR = "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png";
     public static String DEFAULT_CREATE_DATE = "1970-01-01 00:00:00";
@@ -34,6 +37,8 @@ public class DefaultVals {
     public static final String MSG_USER_NOT_EXISTS = "User not exists";
     public static final String MSG_USER_EXISTS = "User exists";
     public static final String MSG_SERVER_ERROR = "Server error";
+
+
 
 
 }
