@@ -37,4 +37,8 @@
         select * from vote_table where vote_id = #{voteId};
     </select>
 
+    <select id="getUserVoteRecord" resultType="com.grad.ret.vote.VoteRecord">
+        select * from vote_record where uid = #{uid} and vote_id = #{voteId};
+    </select>
+
 </mapper>

@@ -21,6 +21,6 @@ public class FileService {
         String res = "";
         for(int i = 1; i < s.length; i ++)
             res += s[i];
-        return DefaultVals.FILE_SERVER_URL + s[0] + "/" + res;
+        return s[0] + "/" + res;
     }
 }

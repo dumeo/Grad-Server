@@ -7,10 +7,9 @@ import com.grad.dao.RedisOperator;
 import com.grad.dao.UserMapper;
 import com.grad.dao.VoteMapper;
 import com.grad.pojo.User;
+import com.grad.ret.ClientToThisInfo;
 import com.grad.ret.Status;
-import com.grad.ret.vote.Vote;
-import com.grad.ret.vote.VoteItem;
-import com.grad.ret.vote.VoteOption;
+import com.grad.ret.vote.*;
 import com.grad.util.DateUtil;
 import com.grad.util.JsonUtil;
 import com.grad.util.UUIDUtil;
@@ -64,9 +63,23 @@ public class VoteService {
     }
 
 
-    public String getVoteById(String voteId, String clientUid){
+    public VoteItem getVoteById(String clientUid, String voteId){
+        Vote vote = voteMapper.getVoteById(voteId);
+        ClientToVoteInfo clientToThisInfo = generateCTV(clientUid, voteId);
+        List<VoteOption> voteOptions = voteMapper.getVoteOptionsByVoteId(voteId);
+        User user = userMapper.getUserById(vote.getUid());
+        user.setPassword("");
+        return new VoteItem(vote, user, clientToThisInfo, voteOptions);
+    }
 
-        return null;
+    private ClientToVoteInfo generateCTV(String clientUid, String voteId) {
+        ClientToVoteInfo clientToVoteInfo = new ClientToVoteInfo();
+        VoteRecord voteRecord = voteMapper.getUserVoteRecord(clientUid, voteId);
+        if(voteRecord != null){
+            clientToVoteInfo.setVoted(true);
+            clientToVoteInfo.setOptionId(voteRecord.getOptionId());
+        }
+        return clientToVoteInfo;
     }
 
     public List<VoteItem> getVoteByNewest() {

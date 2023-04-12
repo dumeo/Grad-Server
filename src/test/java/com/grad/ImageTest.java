@@ -21,15 +21,10 @@ public class ImageTest {
 
     @Test
     public void test1() throws IOException {
-        List<ImageItem> imageItems = imageMapper.getImgUrls();
-        for(ImageItem imageItem : imageItems){
-            String url = imageItem.getUrl();
-            InputStream murl = new URL(url).openStream();
-            BufferedImage sourceImg = ImageIO.read(murl);
-            long width = sourceImg.getWidth();   // 源图宽度
-            long height = sourceImg.getHeight();   // 源图高度
-            imageMapper.updateImgSize(imageItem.getImgId(), width, height);
-        }
+//        List<ImageItem> imageItems = imageMapper.getImgUrls();
+//        for(ImageItem imageItem : imageItems){
+//
+//        }
     }
 
 

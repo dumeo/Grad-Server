@@ -52,4 +52,16 @@ public class VoteController {
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
+
+    @GetMapping("/vote")
+    public ResponseEntity<VoteItem> getVoteById(@RequestParam("clientUid")String clientUid, @RequestParam("voteId")String voteId){
+        try{
+            log.info("clientUid = " + clientUid + ", voteId = " + voteId);
+            VoteItem voteItem = voteService.getVoteById(clientUid, voteId);
+            return new ResponseEntity<>(voteItem, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 }

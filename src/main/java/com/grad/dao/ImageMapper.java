@@ -12,4 +12,5 @@ public interface ImageMapper {
     public List<ImageItem> selectImagesByPostId(@Param("postId") String postId);
     public List<ImageItem> getImgUrls();
     public void updateImgSize(@Param("imgId")long imgId, @Param("width") long width, @Param("height") long height);
+    public void setUrl(@Param("originalUrl")String originalUrl,@Param("url")String url);
 }

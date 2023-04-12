@@ -106,9 +106,16 @@ public class PostService {
         PostUserInfo postUserInfo = new PostUserInfo(user.getAvatarUrl(), user.getUsername(), user.getHouseAddr());
         List<ImageItem> imageItems;
         imageItems = imageMapper.selectImagesByPostId(postId);
+        paddingImageUrl(imageItems);
         PostItem res = new PostItem(post, postUserInfo, imageItems);
 
         return res;
+    }
+
+    private void paddingImageUrl(List<ImageItem> imageItems){
+        for(ImageItem imageItem : imageItems){
+            imageItem.setUrl(DefaultVals.FILE_SERVER_URL + imageItem.getUrl());
+        }
     }
 
 

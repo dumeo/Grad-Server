@@ -22,5 +22,8 @@
     <update id="updateImgSize">
         update img_table set width = #{width}, height = #{height} where img_id = #{imgId};
     </update>
+    <update id="setUrl">
+        update img_table set url = #{url} where url = #{originalUrl};
+    </update>
 
 </mapper>
