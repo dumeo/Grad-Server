@@ -26,8 +26,12 @@ public class UserController {
 
     @PostMapping("/user/register")
     public ResponseEntity<User> registerUser(@RequestBody User user) throws InterruptedException {
+        log.info("get user:" + user);
         try {
             User user_ = userService.registerUser(user);
+            if(user_ == null){
+                return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+            }
             user_.setPassword("");
             return new ResponseEntity<>(user_, HttpStatus.OK);
         }catch (Exception e){
