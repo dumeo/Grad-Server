@@ -7,7 +7,6 @@ import com.grad.dao.RedisOperator;
 import com.grad.dao.UserMapper;
 import com.grad.dao.VoteMapper;
 import com.grad.pojo.User;
-import com.grad.ret.ClientToThisInfo;
 import com.grad.ret.Status;
 import com.grad.ret.vote.*;
 import com.grad.util.DateUtil;
@@ -19,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -65,15 +63,28 @@ public class VoteService {
 
     public VoteItem getVoteById(String clientUid, String voteId){
         Vote vote = voteMapper.getVoteById(voteId);
-        ClientToVoteInfo clientToThisInfo = generateCTV(clientUid, voteId);
+        List<String> votingIds = redisOperator.getKeys(VoteConstants.REDIS_VOTE_PREFIX);
+        if(votingIds.contains(vote.getVoteId())){
+            vote.setVoteStatus(VoteConstants.VOTE_STATUS_VOTING);
+        }else{
+            vote.setVoteStatus(VoteConstants.VOTE_STATUS_ENDED);
+        }
+        Object cntObj = voteMapper.getVoteCntByVoteId(voteId);
+        vote.setVoteCnt((cntObj == null ? 0 : (long)cntObj));
+        ClientToVoteInfo clientToVoteInfo = generateCTV(clientUid, voteId);
         List<VoteOption> voteOptions = voteMapper.getVoteOptionsByVoteId(voteId);
+        for(VoteOption voteOption : voteOptions){
+            Object cntObj2 = voteMapper.getOptionVotedCnt(voteOption.getOptionId());
+            voteOption.setCnt(cntObj2 == null ? 0 : (long)cntObj2);
+        }
         User user = userMapper.getUserById(vote.getUid());
         user.setPassword("");
-        return new VoteItem(vote, user, clientToThisInfo, voteOptions);
+        return new VoteItem(vote, user, clientToVoteInfo, voteOptions);
     }
 
     private ClientToVoteInfo generateCTV(String clientUid, String voteId) {
         ClientToVoteInfo clientToVoteInfo = new ClientToVoteInfo();
+        log.info("clientUid = " + clientUid + ", voteId = " + voteId);
         VoteRecord voteRecord = voteMapper.getUserVoteRecord(clientUid, voteId);
         if(voteRecord != null){
             clientToVoteInfo.setVoted(true);
@@ -87,11 +98,22 @@ public class VoteService {
         List<String> votingIds = redisOperator.getKeys(VoteConstants.REDIS_VOTE_PREFIX);
         List<VoteItem> res = new ArrayList<>();
         for(Vote vote : votes){
-            if(votingIds.contains(vote.getVoteId()))
+            //Get how many vote cnt
+            if(votingIds.contains(vote.getVoteId())){
                 vote.setVoteStatus(VoteConstants.VOTE_STATUS_VOTING);
-            else vote.setVoteStatus(VoteConstants.VOTE_STATUS_ENDED);
+            }
+            else{
+                vote.setVoteStatus(VoteConstants.VOTE_STATUS_ENDED);
+            }
+            Object cntObj = voteMapper.getVoteCntByVoteId(vote.getVoteId());
+            vote.setVoteCnt(cntObj == null ? 0 : (long)cntObj);
+
             User user = userMapper.getUserById(vote.getUid());
             List<VoteOption> voteOptions = voteMapper.getVoteOptionsByVoteId(vote.getVoteId());
+            for(VoteOption voteOption : voteOptions){
+                Object cntObj2 = voteMapper.getOptionVotedCnt(voteOption.getOptionId());
+                voteOption.setCnt(cntObj2 == null ? 0 : (long)cntObj2);
+            }
             VoteItem voteItem = new VoteItem(vote, user, null, voteOptions);
             res.add(voteItem);
         }
@@ -102,15 +124,32 @@ public class VoteService {
         List<String> votingIds = redisOperator.getKeys(VoteConstants.REDIS_VOTE_PREFIX);
         List<VoteItem> res = new ArrayList<>();
         for(Vote vote : votes){
-            if(votingIds.contains(vote.getVoteId()))
+            if(votingIds.contains(vote.getVoteId())){
                 vote.setVoteStatus(VoteConstants.VOTE_STATUS_VOTING);
-            else vote.setVoteStatus(VoteConstants.VOTE_STATUS_ENDED);
+                vote.setVoteCnt((int) redisOperator.get(VoteConstants.REDIS_VOTE_PREFIX + vote.getVoteId()));
+            }
+            else{
+                vote.setVoteStatus(VoteConstants.VOTE_STATUS_ENDED);
+            }
+            Object cntObj = voteMapper.getVoteCntByVoteId(vote.getVoteId());
+            vote.setVoteCnt(cntObj == null ? 0 : (long)cntObj);
             User user = userMapper.getUserById(vote.getUid());
             List<VoteOption> voteOptions = voteMapper.getVoteOptionsByVoteId(vote.getVoteId());
+            for(VoteOption voteOption : voteOptions){
+                Object cntObj2 = voteMapper.getOptionVotedCnt(voteOption.getOptionId());
+                voteOption.setCnt(cntObj2 == null ? 0 : (long)cntObj2);
+            }
             VoteItem voteItem = new VoteItem(vote, user, null, voteOptions);
             res.add(voteItem);
         }
 
         return res;
+    }
+
+    public VoteItem vote(String uid, String voteId, String optionId) {
+        ClientToVoteInfo clientToVoteInfo = generateCTV(uid, voteId);
+        if(clientToVoteInfo.isVoted() == false)
+            voteMapper.addVoteRecord(uid, voteId, optionId);
+        return getVoteById(uid, voteId);
     }
 }

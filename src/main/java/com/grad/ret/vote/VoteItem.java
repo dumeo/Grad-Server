@@ -1,6 +1,5 @@
 package com.grad.ret.vote;
 
-import com.grad.pojo.Post;
 import com.grad.pojo.User;
 
 import java.util.List;
@@ -8,16 +7,16 @@ import java.util.List;
 public class VoteItem {
     private Vote vote;
     private User user;
-    private ClientToVoteInfo clientToThisInfo;
+    private ClientToVoteInfo clientToVoteInfo;
     private List<VoteOption> voteOptions;
 
     public VoteItem() {
     }
 
-    public VoteItem(Vote vote, User user, ClientToVoteInfo clientToThisInfo, List<VoteOption> voteOptions) {
+    public VoteItem(Vote vote, User user, ClientToVoteInfo clientToVoteInfo, List<VoteOption> voteOptions) {
         this.vote = vote;
         this.user = user;
-        this.clientToThisInfo = clientToThisInfo;
+        this.clientToVoteInfo = clientToVoteInfo;
         this.voteOptions = voteOptions;
     }
 
@@ -37,12 +36,12 @@ public class VoteItem {
         this.user = user;
     }
 
-    public ClientToVoteInfo getClientToThisInfo() {
-        return clientToThisInfo;
+    public ClientToVoteInfo getClientToVoteInfo() {
+        return clientToVoteInfo;
     }
 
-    public void setClientToThisInfo(ClientToVoteInfo clientToThisInfo) {
-        this.clientToThisInfo = clientToThisInfo;
+    public void setClientToVoteInfo(ClientToVoteInfo clientToVoteInfo) {
+        this.clientToVoteInfo = clientToVoteInfo;
     }
 
     public List<VoteOption> getVoteOptions() {
@@ -51,5 +50,15 @@ public class VoteItem {
 
     public void setVoteOptions(List<VoteOption> voteOptions) {
         this.voteOptions = voteOptions;
+    }
+
+    @Override
+    public String toString() {
+        return "VoteItem{" +
+                "vote=" + vote +
+                ", user=" + user +
+                ", clientToVoteInfo=" + clientToVoteInfo +
+                ", voteOptions=" + voteOptions +
+                '}';
     }
 }

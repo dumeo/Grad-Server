@@ -24,7 +24,6 @@ public class VoteController {
     @PostMapping("/vote/add")
     public String addVote(@RequestBody VoteItem voteItem){
         try {
-            log.info("voteItem:" + voteItem);
             return voteService.addVote(voteItem);
         }catch (Exception e){
             e.printStackTrace();
@@ -39,6 +38,7 @@ public class VoteController {
            List<VoteItem> voteItemList = voteService.getVoteByNewest();
            return new ResponseEntity<>(voteItemList, HttpStatus.OK);
         }catch (Exception e){
+            e.printStackTrace();
            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
@@ -56,12 +56,25 @@ public class VoteController {
     @GetMapping("/vote")
     public ResponseEntity<VoteItem> getVoteById(@RequestParam("clientUid")String clientUid, @RequestParam("voteId")String voteId){
         try{
-            log.info("clientUid = " + clientUid + ", voteId = " + voteId);
             VoteItem voteItem = voteService.getVoteById(clientUid, voteId);
+//            log.info("return voteItem:" + voteItem.toString());
             return new ResponseEntity<>(voteItem, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
+    @PostMapping("/vote/to-vote")
+    public ResponseEntity<VoteItem> toVote(@RequestParam("uid")String uid, @RequestParam("voteId")String voteId, @RequestParam("optionId")String optionId){
+        try {
+            VoteItem voteItem = voteService.vote(uid, voteId, optionId);
+//            log.info("return voteItem:" + voteItem.toString());
+            return new ResponseEntity<>(voteItem, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
+    }
+
 }

@@ -1,6 +1,9 @@
 package com.grad.ret.vote;
 
+import lombok.Data;
+import lombok.ToString;
 
+@Data
 public class ClientToVoteInfo {
     private boolean isVoted;
     private String optionId;
@@ -27,5 +30,13 @@ public class ClientToVoteInfo {
 
     public void setOptionId(String optionId) {
         this.optionId = optionId;
+    }
+
+    @Override
+    public String toString() {
+        return "ClientToVoteInfo{" +
+                "isVoted=" + isVoted +
+                ", optionId='" + optionId + '\'' +
+                '}';
     }
 }

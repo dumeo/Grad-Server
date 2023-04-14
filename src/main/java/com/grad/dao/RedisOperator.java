@@ -30,9 +30,13 @@ public class RedisOperator {
         }
         return res;
     }
+    public Object get(String key){
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        return valueOperations.get(key);
+    }
 
-    public Set<String> getKeySet(String prefix){
-        Set<String> keys = redisTemplate.keys(prefix.concat("*"));
-        return keys;
+    public void increase(String key){
+        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
+        valueOperations.increment(key);
     }
 }

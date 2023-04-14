@@ -41,4 +41,16 @@
         select * from vote_record where uid = #{uid} and vote_id = #{voteId};
     </select>
 
+    <insert id="addVoteRecord">
+        insert into vote_record(uid, vote_id, option_id)
+        values(#{uid}, #{voteId}, #{optionId});
+    </insert>
+
+    <select id="getVoteCntByVoteId" resultType="Object">
+        select count(id) from vote_record where vote_id = #{voteId};
+    </select>
+
+    <select id="getOptionVotedCnt" resultType="Object">
+        select count(id) from vote_record where option_id = #{optionId};
+    </select>
 </mapper>
