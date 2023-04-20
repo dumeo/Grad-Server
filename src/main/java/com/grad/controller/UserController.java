@@ -53,10 +53,10 @@ public class UserController {
     }
 
     @PostMapping("/user/login")
-    public ResponseEntity<User> loginUser(@RequestParam("username")String username, @RequestParam("password")String password){
+    public ResponseEntity<User> loginUser(@RequestParam("email")String email, @RequestParam("password")String password){
 
         try {
-            User user = userService.loginUser(username, password);
+            User user = userService.loginUser(email, password);
             if(user == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             user.setPassword("");
             return new ResponseEntity<>(user, HttpStatus.OK);

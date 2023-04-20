@@ -114,7 +114,8 @@ public class PostService {
 
     private void paddingImageUrl(List<ImageItem> imageItems){
         for(ImageItem imageItem : imageItems){
-            imageItem.setUrl(DefaultVals.FILE_SERVER_URL + imageItem.getUrl());
+            if(!imageItem.getUrl().startsWith("http"))
+                imageItem.setUrl(DefaultVals.FILE_SERVER_URL + imageItem.getUrl());
         }
     }
 
@@ -146,26 +147,32 @@ public class PostService {
     public String setLikeStatus(String uid, String postId, int transferType) throws Exception {
 
             if(transferType == DefaultVals.LIKED_TO_DISLIKE){
+//                log.info("LIKED_TO_DISLIKE");
                 postMapper.increasePostLikeCnt(postId, -2);
                 postMapper.setUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_DISLIKED);
             }
             else if(transferType == DefaultVals.DISLIKED_TO_LIKE){
+//                log.info("DISLIKED_TO_LIKE");
                 postMapper.increasePostLikeCnt( postId, 2);
                 postMapper.setUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_LIKED);
             }
             else if(transferType == DefaultVals.LIKED_TO_NOSTATUS){
+//                log.info("LIKED_TO_NOSTATUS");
                 postMapper.increasePostLikeCnt(postId, -1);
                 postMapper.deleteUserLikeStatus(uid, postId);
             }
             else if(transferType == DefaultVals.DISLIKED_TO_NOSTATUS){
+//                log.info("DISLIKED_TO_NOSTATUS");
                 postMapper.increasePostLikeCnt(postId, 1);
                 postMapper.deleteUserLikeStatus(uid, postId);
             }
             else if(transferType == DefaultVals.NOSTATUS_TO_DISLIKE){
+//                log.info("NOSTATUS_TO_DISLIKE");
                 postMapper.increasePostLikeCnt(postId, -1);
                 postMapper.addUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_DISLIKED);
             }
             else if(transferType == DefaultVals.NOSTATUS_TO_LIKE){
+//                log.info("NOSTATUS_TO_LIKE");
                 postMapper.increasePostLikeCnt(postId, 1);
                 postMapper.addUserLikeStatus(uid, postId, DefaultVals.LIKE_STATUS_LIKED);
             }

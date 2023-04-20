@@ -60,6 +60,7 @@ public class PostsController {
 
     @PostMapping("/post/like")
     public String setLikeStatus(@RequestParam("uid")String uid, @RequestParam("postId")String postId, @RequestParam("transferType")int transferType){
+        log.info("uid = " + uid + ", postId = " + postId + ", type = " + transferType);
         try {
         return postService.setLikeStatus(uid, postId, transferType);
         }catch (Exception e){

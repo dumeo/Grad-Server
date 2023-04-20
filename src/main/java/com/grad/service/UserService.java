@@ -41,6 +41,8 @@ public class UserService {
     }
 
     public User loginUser(String username, String password) {
-        return null;//=========================
+        User user = userMapper.getUserByEmail(username);
+        if(user == null || !user.getPassword().equals(password)) return null;
+        return user;
     }
 }
