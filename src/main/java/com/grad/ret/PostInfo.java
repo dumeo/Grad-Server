@@ -1,8 +1,13 @@
 package com.grad.ret;
 
+
+import com.grad.pojo.ImageItem;
+
+import java.util.List;
+
 public class PostInfo {
     private long commentCnt;
-
+    List<ImageItem> imageItems;
     public PostInfo() {
     }
 
@@ -12,5 +17,13 @@ public class PostInfo {
 
     public void setCommentCnt(long commentCnt) {
         this.commentCnt = commentCnt;
+    }
+
+    public List<ImageItem> getImageItems() {
+        return imageItems;
+    }
+
+    public void setImageItems(List<ImageItem> imageItems) {
+        this.imageItems = imageItems;
     }
 }

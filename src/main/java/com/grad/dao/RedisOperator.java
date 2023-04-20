@@ -35,21 +35,5 @@ public class RedisOperator {
         return valueOperations.get(key);
     }
 
-    public void increase(String key){
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        valueOperations.increment(key);
-    }
-
-    public void rightPush(String key, String val){
-        redisTemplate.opsForList().rightPush(key, val);
-    }
-    public void leftPop(String key){
-        redisTemplate.opsForList().leftPop(key);
-    }
-
-    public long getListSize(String key){
-        return redisTemplate.opsForList().size(key);
-    }
-
 
 }

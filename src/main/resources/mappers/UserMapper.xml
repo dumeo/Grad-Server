@@ -16,4 +16,13 @@
         select * from user where email = #{email};
     </select>
 
+    <insert id="storeUserViewRecord">
+        insert into user_view_record(uid, post_id, create_date)
+        values(#{uid}, #{postId}, #{createDate}) limit 0, 50;
+    </insert>
+
+    <select id="getUserViewRecord" resultType="String">
+        select post_id from user_view_record order by create_date desc limit 0, 20;
+    </select>
+
 </mapper>

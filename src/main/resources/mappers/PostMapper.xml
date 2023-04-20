@@ -49,4 +49,12 @@
         delete from user_like_post where uid = #{uid} and post_id = #{postId};
     </delete>
 
+    <select id="getPostsByRange" resultType="Post">
+        select * from post_table limit #{start}, #{end};;
+    </select>
+
+    <select id="getPostTotalCnt" resultType="Integer">
+        select count(post_id) from post_table;
+    </select>
+
 </mapper>

@@ -18,4 +18,6 @@ public interface PostMapper {
     public void setUserLikeStatus(@Param("uid")String uid, @Param("postId")String postId, @Param("likeStatus")int likeStatus);
     public void addUserLikeStatus(@Param("uid")String uid, @Param("postId")String postId, @Param("likeStatus")int likeStatus);
     public void deleteUserLikeStatus(@Param("uid")String uid, @Param("postId")String postId);
+    public List<Post> getPostsByRange(@Param("start")Integer start, @Param("end") Integer end);
+    public int getPostTotalCnt();
 }

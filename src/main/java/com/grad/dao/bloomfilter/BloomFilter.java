@@ -1,12 +1,14 @@
 package com.grad.dao.bloomfilter;
 
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBloomFilter;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BloomFilterOp {
+@Slf4j
+public class BloomFilter {
     @Resource
     RedissonClient redissonClient;
     public void add(String key, String value) {
@@ -17,6 +19,14 @@ public class BloomFilterOp {
 
     public boolean contains(String key, String value) {
         RBloomFilter<String> bloomFilter = redissonClient.getBloomFilter(key);
-        return bloomFilter.contains(value);
+        boolean res = false;
+        try{
+            res = bloomFilter.contains(value);
+            return res;
+        }catch (Exception e){
+            log.info("======= BloomFilter is not initialized, Trying to init  ======");
+            bloomFilter.tryInit(10000000, 0.03);
+            return bloomFilter.contains(value);
+        }
     }
 }

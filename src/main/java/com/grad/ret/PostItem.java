@@ -2,22 +2,24 @@ package com.grad.ret;
 
 import com.grad.pojo.ImageItem;
 import com.grad.pojo.Post;
+import com.grad.pojo.User;
 
 import java.util.List;
+
 
 public class PostItem {
 
 
     private Post post;
-    private PostUserInfo postUserInfo;
-    private List<ImageItem> imageItems;
+    private User user;
     private ClientToThisInfo clientToThisInfo;
     private PostInfo postInfo;
 
-    public PostItem(Post post, PostUserInfo postUserInfo, List<ImageItem> imageItems) {
+    public PostItem(Post post, User user, ClientToThisInfo clientToThisInfo, PostInfo postInfo) {
         this.post = post;
-        this.postUserInfo = postUserInfo;
-        this.imageItems = imageItems;
+        this.user = user;
+        this.clientToThisInfo = clientToThisInfo;
+        this.postInfo = postInfo;
     }
 
     public Post getPost() {
@@ -28,20 +30,12 @@ public class PostItem {
         this.post = post;
     }
 
-    public PostUserInfo getPostUserInfo() {
-        return postUserInfo;
+    public User getUser() {
+        return user;
     }
 
-    public void setPostUserInfo(PostUserInfo postUserInfo) {
-        this.postUserInfo = postUserInfo;
-    }
-
-    public List<ImageItem> getImageItems() {
-        return imageItems;
-    }
-
-    public void setImageItems(List<ImageItem> imageItems) {
-        this.imageItems = imageItems;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public ClientToThisInfo getClientToThisInfo() {

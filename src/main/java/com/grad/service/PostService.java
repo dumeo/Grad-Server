@@ -51,10 +51,6 @@ public class PostService {
         PostItem postItem = postToPostItem(post);
         ClientToThisInfo clientToThisInfo = generateClientToThisInfo(clientUid, postId);
         postItem.setClientToThisInfo(clientToThisInfo);
-        PostInfo postInfo = new PostInfo();
-        long commentCnt = commentMapper.getPostCommentCnt(postId);
-        postInfo.setCommentCnt(commentCnt);
-        postItem.setPostInfo(postInfo);
         return JsonUtil.objectToJson(postItem);
     }
 
@@ -99,16 +95,19 @@ public class PostService {
 
 
 
-    private PostItem postToPostItem(Post post){
+    public PostItem postToPostItem(Post post){
         String postId = post.getPostId();
         String uid = post.getUid();
         User user = userMapper.getUserById(uid);
-        PostUserInfo postUserInfo = new PostUserInfo(user.getAvatarUrl(), user.getUsername(), user.getHouseAddr());
+        user.setPassword("");
         List<ImageItem> imageItems;
         imageItems = imageMapper.selectImagesByPostId(postId);
         paddingImageUrl(imageItems);
-        PostItem res = new PostItem(post, postUserInfo, imageItems);
-
+        PostInfo postInfo = new PostInfo();
+        postInfo.setImageItems(imageItems);
+        long commentCnt = commentMapper.getPostCommentCnt(postId);
+        postInfo.setCommentCnt(commentCnt);
+        PostItem res = new PostItem(post, user, null, postInfo);
         return res;
     }
 
@@ -184,6 +183,7 @@ public class PostService {
             collectMapper.addCollect(uid, postId);
         else collectMapper.deleteCollect(uid, postId);
         return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
-
     }
+
+
 }

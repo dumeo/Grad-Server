@@ -1,9 +1,12 @@
 package com.grad.controller;
 
+import com.grad.dao.bloomfilter.BloomFilter;
 import com.grad.pojo.Post;
 import com.grad.ret.Status;
 import com.grad.service.PostService;
 import com.grad.constants.DefaultVals;
+import com.grad.service.RecommService;
+import com.grad.service.UserService;
 import com.grad.util.JsonUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -15,10 +18,23 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 public class PostsController {
     @Resource
     PostService postService;
-
+    @Resource
+    RecommService recommService;
+    @Resource
+    UserService userService;
+    @Resource
+    BloomFilter bloomFilter;
 
     @GetMapping("/post")
     public String getPostById(@RequestParam("clientUid")String clientUid, @RequestParam("postId")String postId){
+
+       new Thread(new Runnable() {
+           @Override
+           public void run() {
+               userService.storeUserViewRecord(clientUid, postId);
+           }
+       }).start();
+
         return postService.getPostById(clientUid, postId);
     }
 
