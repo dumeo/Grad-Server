@@ -44,17 +44,6 @@ public class CommentService {
         }
     }
 
-    public String getCommentsByPostId2(String postId){
-        List<Comment> commentList = commentMapper.getCommentsByTime(postId);
-        List<CommentItem> commentItems = new ArrayList<>();
-        for(Comment comment : commentList){
-            String uid = comment.getUid();
-            User user = userMapper.getUserById(uid);
-            commentItems.add(new CommentItem(comment, user));
-        }
-
-        return JsonUtil.objectToJson(commentItems);
-    }
 
     public String getCommentsByPostId(String clientUid, String postId){
         List<Comment> commentList = commentMapper.getCommentsByTime(postId);

@@ -3,6 +3,7 @@ package com.grad.controller;
 import com.grad.constants.UserConstants;
 import com.grad.pojo.User;
 import com.grad.ret.Status;
+import com.grad.ret.committee.NoteItem;
 import com.grad.service.UserService;
 import com.grad.ret.RegisterRet;
 import com.grad.constants.DefaultVals;
@@ -14,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.concurrent.locks.ReadWriteLock;
 
 import static java.lang.Thread.sleep;
@@ -66,6 +68,16 @@ public class UserController {
         }
 
 
+    }
+
+    @GetMapping("/user/notes")
+    public ResponseEntity<List<NoteItem>> getNotes(@RequestParam("communityName")String communityName){
+        return userService.getNotes(communityName);
+    }
+
+    @PostMapping("/user/read-note")
+    public ResponseEntity readNote(@RequestParam("noteId")String noteId){
+        return userService.readNote(noteId);
     }
 
 }

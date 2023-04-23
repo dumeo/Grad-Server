@@ -3,13 +3,17 @@ package com.grad.service;
 import com.grad.constants.DefaultVals;
 import com.grad.constants.RecommContants;
 import com.grad.constants.UserConstants;
+import com.grad.dao.CommitteeMapper;
 import com.grad.dao.UserMapper;
 import com.grad.dao.bloomfilter.BloomFilter;
 import com.grad.pojo.User;
+import com.grad.ret.committee.NoteItem;
 import com.grad.util.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +28,8 @@ public class UserService {
     RedisTemplate redisTemplate;
     @Resource
     BloomFilter bloomFilter;
+    @Resource
+    CommitteeMapper committeeMapper;
 
     public User registerUser(User user){
         if(checkEmailExists(user.getEmail())) return null;
@@ -71,4 +77,22 @@ public class UserService {
 
     }
 
+    public ResponseEntity<List<NoteItem>> getNotes(String communityName){
+        try{
+            List<NoteItem> noteItems = userMapper.getNotes(communityName);
+            return new ResponseEntity<>(noteItems, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public ResponseEntity readNote(String noteId) {
+        try {
+            userMapper.readNote(noteId);
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
+        }catch (Exception e){
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 }

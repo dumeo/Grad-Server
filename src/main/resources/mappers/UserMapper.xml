@@ -25,4 +25,11 @@
         select post_id from user_view_record order by create_date desc limit 0, 20;
     </select>
 
+    <select id="getNotes" resultType="com.grad.ret.committee.NoteItem">
+        select * from community_note where community_name = #{communityName};
+    </select>
+
+    <update id="readNote">
+        update community_note set read_cnt = read_cnt + 1 where note_id = #{noteId};
+    </update>
 </mapper>
