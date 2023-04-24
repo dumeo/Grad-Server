@@ -41,7 +41,7 @@ public class VoteService {
     public String addVote(VoteItem voteItem) throws Exception{
         String createDate = DateUtil.generateDate();
         String endDate = voteItem.getVote().getEndDate();
-        long interTime = DateUtil.getDateInter(createDate, endDate);
+        long interTime = DateUtil.getDateHourInter(createDate, endDate);
         Vote vote = voteItem.getVote();
         String voteId = UUIDUtil.generateUUID();
         vote.setVoteId(voteId);

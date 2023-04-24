@@ -17,4 +17,7 @@ public interface UserMapper {
     public List<String> getUserViewRecord(@Param("uid")String uid);
     List<NoteItem> getNotes(@Param("communityName")String communityName);
     void readNote(@Param("noteId")String noteId);
+    void addReserve(@Param("reserveId")String reserveId, @Param("uid")String uid, @Param("qrUrl")String qrUrl);
+
+
 }

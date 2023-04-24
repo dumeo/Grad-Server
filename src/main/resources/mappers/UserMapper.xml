@@ -32,4 +32,8 @@
     <update id="readNote">
         update community_note set read_cnt = read_cnt + 1 where note_id = #{noteId};
     </update>
+
+    <insert id="addReserve">
+        insert into reserve_table values(#{reserveId}, #{uid}, #{qrUrl});
+    </insert>
 </mapper>

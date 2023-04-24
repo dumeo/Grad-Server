@@ -4,6 +4,7 @@ import com.grad.constants.UserConstants;
 import com.grad.pojo.User;
 import com.grad.ret.Status;
 import com.grad.ret.committee.NoteItem;
+import com.grad.ret.reserve.ReserveItem;
 import com.grad.service.UserService;
 import com.grad.ret.RegisterRet;
 import com.grad.constants.DefaultVals;
@@ -79,5 +80,16 @@ public class UserController {
     public ResponseEntity readNote(@RequestParam("noteId")String noteId){
         return userService.readNote(noteId);
     }
+
+    @PostMapping("/user/add-reserve")
+    public ResponseEntity addReserve(@RequestBody ReserveItem reserveItem){
+        return userService.addReserve(reserveItem);
+    }
+
+    @GetMapping("/user/reserve")
+    public ResponseEntity<List<ReserveItem>> getUserReserve(@RequestParam("uid")String uid){
+        return userService.getUserReserve(uid);
+    }
+
 
 }

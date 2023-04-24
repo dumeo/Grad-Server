@@ -1,5 +1,6 @@
 package com.grad;
 
+import com.grad.constants.UserConstants;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -17,9 +18,7 @@ public class RedisTest {
 
     @Test
     public void test(){
-        ValueOperations<String, Object> valueOperations = redisTemplate.opsForValue();
-        log.error("key1 = {}", valueOperations.get("key1"));
-//        valueOperations.set("key22", "hi", 120, TimeUnit.SECONDS);
+//        redisTemplate.delete(UserConstants.REDIS_RESERVE_PREFIX + "50a9437d12634a30962df64f3efc59ff");
     }
 
     @Test

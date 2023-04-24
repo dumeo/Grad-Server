@@ -8,6 +8,7 @@ import com.grad.dao.UserMapper;
 import com.grad.dao.bloomfilter.BloomFilter;
 import com.grad.pojo.User;
 import com.grad.ret.committee.NoteItem;
+import com.grad.ret.reserve.ReserveItem;
 import com.grad.util.*;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -16,7 +17,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @Slf4j
@@ -30,6 +35,8 @@ public class UserService {
     BloomFilter bloomFilter;
     @Resource
     CommitteeMapper committeeMapper;
+    @Resource
+    FileService fileService;
 
     public User registerUser(User user){
         if(checkEmailExists(user.getEmail())) return null;
@@ -93,6 +100,54 @@ public class UserService {
             return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
         }catch (Exception e){
             return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public ResponseEntity addReserve(ReserveItem reserveItem) {
+        try {
+            String reserveId = UUIDUtil.generateUUID();
+            reserveItem.setReserveId(reserveId);
+            String currDate = DateUtil.generateDate();
+            String reserveDate = reserveItem.getReserveDate();
+            String uid = reserveItem.getUid();
+            String content = reserveItem.getReserveContent() + "|"
+                    + reserveItem.getPhoneNum()
+                    + "|"
+                    + reserveItem.getReserveDate();
+            byte[] imgQRCodeBytes = QRCodeUtil.generateQRCode(content);
+            String[] fileAddr = fileService.client.upload_file(imgQRCodeBytes, "png", null);
+            String fileUrl = fileService.generateFileUrl(fileAddr);
+            String qrUrl = fileUrl;
+            reserveItem.setQrUrl(qrUrl);
+            String redisVal = JsonUtil.objectToJson(reserveItem);
+            long diffMinutes = DateUtil.getDateMinuteInter(reserveDate, currDate);
+            //Store to db, 为了以后将过期的预约的图片从fdfs中删掉
+            userMapper.addReserve(reserveId, uid, qrUrl);
+            redisTemplate.opsForValue().set(UserConstants.REDIS_RESERVE_PREFIX + uid + reserveId, redisVal, diffMinutes, TimeUnit.MINUTES);
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.UNAVAILABLE_FOR_LEGAL_REASONS);
+        }
+    }
+
+    public ResponseEntity<List<ReserveItem>> getUserReserve(String uid) {
+        try {
+            Set<String> keySet = redisTemplate.keys((UserConstants.REDIS_RESERVE_PREFIX + uid).concat("*"));
+            List<String> keys = new ArrayList<>(keySet);
+            List<ReserveItem> res = new ArrayList<>();
+            for(String key : keys){
+                String val = (String) redisTemplate.opsForValue().get(key);
+                ReserveItem reserveItem = JsonUtil.jsonToObject(val, ReserveItem.class);
+                String qrUrl = reserveItem.getQrUrl();
+                if(!qrUrl.startsWith("http:"))
+                    reserveItem.setQrUrl(DefaultVals.FILE_SERVER_URL + qrUrl);
+                res.add(reserveItem);
+            }
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 }
