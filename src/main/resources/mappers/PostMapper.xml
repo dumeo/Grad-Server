@@ -6,7 +6,7 @@
 
 <mapper namespace="com.grad.dao.PostMapper">
     <select id="getPostsByNewest" resultType="Post">
-        select * from post_table order by post_date desc limit 0, #{count};
+        select * from post_table where post_tag = #{postTag} order by post_date desc limit 0, #{count};
     </select>
 
     <insert id="addPost" parameterType="Post">
@@ -19,7 +19,7 @@
     </update>
 
     <select id="getMorePosts" resultType="Post">
-        select * from post_table where post_date &lt; #{startTime}
+        select * from post_table where post_tag = #{postTag} and post_date &lt; #{startTime}
         order by post_date desc limit #{count};
     </select>
 

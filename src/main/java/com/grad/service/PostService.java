@@ -66,18 +66,18 @@ public class PostService {
     }
 
 
-    public String getPosts(){
+    public String getPosts(String postTag){
         List<PostItem> postItems = new ArrayList<>();
-        List<Post> posts = postMapper.getPostsByNewest(DefaultVals.POST_ITEM_COUNT);
+        List<Post> posts = postMapper.getPostsByNewest(postTag, DefaultVals.POST_ITEM_COUNT);
         for(Post post : posts)
             postItems.add(postToPostItem(post));
         String json = JsonUtil.objectToJson(postItems);
         return json;
     }
 
-    public String loadMorePosts(String startTime){
+    public String loadMorePosts(String postTag, String startTime){
         List<PostItem> postItems = new ArrayList<>();
-        List<Post> posts = postMapper.getMorePosts(startTime, DefaultVals.POST_ITEM_COUNT);
+        List<Post> posts = postMapper.getMorePosts(postTag, startTime, DefaultVals.POST_ITEM_COUNT);
         for(Post post : posts)
             postItems.add(postToPostItem(post));
         String json = JsonUtil.objectToJson(postItems);

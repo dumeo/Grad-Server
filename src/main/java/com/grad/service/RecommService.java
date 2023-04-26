@@ -59,25 +59,25 @@ public class RecommService {
     }
 
     //随机推荐：用户点击过的帖子和上一次随机推荐过的帖子都会过滤掉
-    public List<PostItem> randomRecomm(String uid){
-        Random r = new Random();
-        int cnt = postMapper.getPostTotalCnt();
-        int start = r.nextInt(cnt);
-        int end = Math.min(start + RecommContants.RANDOM_RECOMM_CNT, cnt - 1);
-        List<Post> posts = postMapper.getPostsByRange(start, end);
-        List<PostItem> res = new ArrayList<>();
-        String bfRecommendedKey = RecommContants.BF_RECOMMENDED_PREFIX + uid;
-        String bfViewedKey = RecommContants.BF_VIEW_RECORD_PREFIX + uid;
-        for(Post post : posts){
-            if(!bloomFilter.contains(bfRecommendedKey, post.getPostId()) &&
-                !bloomFilter.contains(bfViewedKey, post.getPostId())){
-                res.add(postService.postToPostItem(post));
-                bloomFilter.add(bfRecommendedKey, post.getPostId());
-            }
-
-        }
-        return res;
-    }
+//    public List<PostItem> randomRecomm(String uid){
+//        Random r = new Random();
+//        int cnt = postMapper.getPostTotalCnt();
+//        int start = r.nextInt(cnt);
+//        int end = Math.min(start + RecommContants.RANDOM_RECOMM_CNT, cnt - 1);
+//        List<Post> posts = postMapper.getPostsByRange(start, end);
+//        List<PostItem> res = new ArrayList<>();
+//        String bfRecommendedKey = RecommContants.BF_RECOMMENDED_PREFIX + uid;
+//        String bfViewedKey = RecommContants.BF_VIEW_RECORD_PREFIX + uid;
+//        for(Post post : posts){
+//            if(!bloomFilter.contains(bfRecommendedKey, post.getPostId()) &&
+//                !bloomFilter.contains(bfViewedKey, post.getPostId())){
+//                res.add(postService.postToPostItem(post));
+//                bloomFilter.add(bfRecommendedKey, post.getPostId());
+//            }
+//
+//        }
+//        return res;
+//    }
 
 }
 

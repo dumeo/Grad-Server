@@ -41,14 +41,14 @@ public class PostsController {
 
 
     @GetMapping("/posts")
-    public String getPosts(){
-        String json = postService.getPosts();
+    public String getPosts(@RequestParam("postTag")String postTag){
+        String json = postService.getPosts(postTag);
         return json;
     }
 
     @GetMapping("/post/load-more")
-    public String loadMorePosts(@RequestParam("startTime") String startTime){
-        String json = postService.loadMorePosts(startTime);
+    public String loadMorePosts(@RequestParam("postTag")String postTag, @RequestParam("startTime") String startTime){
+        String json = postService.loadMorePosts(postTag, startTime);
         return json;
     }
 

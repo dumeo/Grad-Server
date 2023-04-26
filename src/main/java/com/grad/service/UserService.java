@@ -81,7 +81,6 @@ public class UserService {
             redisTemplate.opsForList().rightPop(RecommContants.LIST_VIEW_RECORD_PREFIX+uid);
         }
         redisTemplate.opsForList().leftPush(RecommContants.LIST_VIEW_RECORD_PREFIX+uid, postId);
-
     }
 
     public ResponseEntity<List<NoteItem>> getNotes(String communityName){
