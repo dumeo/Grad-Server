@@ -3,6 +3,7 @@ package com.grad.controller;
 import com.grad.dao.bloomfilter.BloomFilter;
 import com.grad.pojo.Post;
 import com.grad.ret.Status;
+import com.grad.service.FileService;
 import com.grad.service.PostService;
 import com.grad.constants.DefaultVals;
 import com.grad.service.RecommService;
@@ -24,6 +25,8 @@ public class PostsController {
     UserService userService;
     @Resource
     BloomFilter bloomFilter;
+    @Resource
+    FileService fileService;
 
     @GetMapping("/post")
     public String getPostById(@RequestParam("clientUid")String clientUid, @RequestParam("postId")String postId){
@@ -67,7 +70,7 @@ public class PostsController {
     @PostMapping("/post/new/upload-imgs")
     public String uploadImages(MultipartHttpServletRequest request) {
         try {
-            return postService.storeImage(request);
+            return fileService.storeImageV1(request);
         }catch (Exception e){
             e.printStackTrace();
             return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));

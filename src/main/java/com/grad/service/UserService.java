@@ -1,5 +1,6 @@
 package com.grad.service;
 
+import com.grad.constants.CommitteeConstants;
 import com.grad.constants.DefaultVals;
 import com.grad.constants.RecommContants;
 import com.grad.constants.UserConstants;
@@ -148,5 +149,17 @@ public class UserService {
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
         }
+    }
+
+    public ResponseEntity<NoteItem> getNewestNote(String communityName) {
+        try {
+            String resStr = (String) redisTemplate.opsForValue().get(CommitteeConstants.COMM_NEWEST_NOTE_PREFIX + communityName);
+            NoteItem res = JsonUtil.jsonToObject(resStr, NoteItem.class);
+            return new ResponseEntity<>(res, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
     }
 }

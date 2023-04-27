@@ -91,5 +91,10 @@ public class UserController {
         return userService.getUserReserve(uid);
     }
 
+    @GetMapping("/user/get-newest-note")
+    public ResponseEntity<NoteItem> getNewestNote(@RequestParam("communityName")String communityName){
+        return userService.getNewestNote(communityName);
+    }
+
 
 }

@@ -2,8 +2,10 @@ package com.grad.controller;
 
 import com.grad.ret.committee.NoteItem;
 import com.grad.service.CommitteeService;
+import io.lettuce.core.RedisCommandTimeoutException;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +21,8 @@ import java.util.List;
 public class CommitteeController {
     @Resource
     CommitteeService committeeService;
+    @Resource
+    RedisTemplate redisTemplate;
 
     @PostMapping("/committee/upload-note")
     public ResponseEntity uploadNote(@RequestParam("communityName") String communityName, @RequestParam("content")String content){

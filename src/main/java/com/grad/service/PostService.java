@@ -119,30 +119,6 @@ public class PostService {
     }
 
 
-
-    public String storeImage(MultipartHttpServletRequest request) throws IOException, ServletException, MyException {
-        String fileName = request.getPart("file").getSubmittedFileName();
-        String postId = StringTool.parsePostId(fileName);
-        long imgOrder = Integer.parseInt(StringTool.parseOrder(fileName));
-//        log.info("posId = " + postId + "\nimageOrder = " + imgOrder);
-        String extName = fileName.substring(fileName.lastIndexOf('.') + 1);
-        InputStream ins = request.getFile("file").getInputStream();
-
-        byte[] bytes = ins.readAllBytes();
-        InputStream inputStream = new ByteArrayInputStream(bytes);
-        BufferedImage sourceImg = ImageIO.read(inputStream);
-        long width = sourceImg.getWidth();   // 源图宽度
-        long height = sourceImg.getHeight();   // 源图高度
-
-        String[] fileAddr = fileService.client.upload_file(bytes, extName, null);
-        String fileUrl = fileService.generateFileUrl(fileAddr);
-        imageMapper.addImage(new ImageItem(1, postId, imgOrder, fileUrl, width, height));
-        postMapper.setPostType(postId, DefaultVals.POST_TYPE_IMG);
-        ins.close();
-        inputStream.close();
-        return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
-    }
-
     public String setLikeStatus(String uid, String postId, int transferType) throws Exception {
 
             if(transferType == DefaultVals.LIKED_TO_DISLIKE){
