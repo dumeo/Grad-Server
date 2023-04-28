@@ -16,7 +16,7 @@ public class FileController {
     FileService fileService;
 
     @PostMapping("/file/upload-file")
-    public ResponseEntity<JsonObject> uploadImg(MultipartHttpServletRequest request){
+    public ResponseEntity<String> uploadImg(MultipartHttpServletRequest request){
         log.info("get upload file request!!!!");
         return fileService.storeFile(request);
     }

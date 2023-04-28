@@ -10,10 +10,12 @@ import com.grad.util.JsonUtil;
 import com.grad.util.StringTool;
 import jakarta.annotation.Resource;
 import jakarta.servlet.ServletException;
+import lombok.extern.slf4j.Slf4j;
 import org.csource.common.MyException;
 import org.csource.fastdfs.ClientGlobal;
 import org.csource.fastdfs.StorageClient;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -25,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 @Service
+@Slf4j
 public class FileService {
     @Resource
     ImageMapper imageMapper;
@@ -69,7 +72,7 @@ public class FileService {
     }
 
     //上传图片、视频等，返回url，不将url存入数据库了
-    public ResponseEntity<JsonObject> storeFile(MultipartHttpServletRequest request) {
+    public ResponseEntity<String> storeFile(MultipartHttpServletRequest request) {
         try{
             String fileName = request.getPart("file").getSubmittedFileName();
             String extName = fileName.substring(fileName.lastIndexOf('.') + 1);
@@ -78,9 +81,10 @@ public class FileService {
             String[] fileAddr = client.upload_file(bytes, extName, null);
             String fileUrl = generateFileUrl(fileAddr);
             ins.close();
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("fileUrl", DefaultVals.FILE_SERVER_URL + fileUrl);
-            return new ResponseEntity<>(jsonObject, HttpStatus.OK);
+            String json = "{\"fileUrl\":" + "\"" + DefaultVals.FILE_SERVER_URL + fileUrl + "\"" + "}";
+            ResponseEntity<String> res = new ResponseEntity<>(json, HttpStatusCode.valueOf(200));
+            return res;
+
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
