@@ -4,6 +4,7 @@ import com.grad.constants.UserConstants;
 import com.grad.pojo.User;
 import com.grad.ret.Status;
 import com.grad.ret.committee.NoteItem;
+import com.grad.ret.communitynews.CommunityNews;
 import com.grad.ret.reserve.ReserveItem;
 import com.grad.service.UserService;
 import com.grad.ret.RegisterRet;
@@ -96,5 +97,9 @@ public class UserController {
         return userService.getNewestNote(communityName);
     }
 
+    @GetMapping("/user/community-news")
+    public ResponseEntity<List<CommunityNews>> getCommunityNews(@RequestParam("communityName")String communityName){
+        return userService.getCommunityNews(communityName);
+    }
 
 }

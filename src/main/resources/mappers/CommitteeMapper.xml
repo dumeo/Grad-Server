@@ -10,6 +10,18 @@
          values(#{noteId},#{communityName},#{content},#{readCnt}, #{createDate});
     </insert>
 
-
+    <insert id="addNews">
+        insert into community_news values(
+        #{newsId},
+        #{communityName},
+        #{newsTitle},
+        #{newsContent},
+        #{headImg},
+        #{viewCnt},
+        #{createDate});
+    </insert>
+    <update id="increaseNewsViewCnt">
+        update community_news set view_cnt = view_cnt + 1 where news_id = #{newsId};
+    </update>
 
 </mapper>

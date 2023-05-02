@@ -36,4 +36,8 @@
     <insert id="addReserve">
         insert into reserve_table values(#{reserveId}, #{uid}, #{qrUrl});
     </insert>
+
+    <select id="getCommunityNews" resultType="com.grad.ret.communitynews.CommunityNews">
+        select * from community_news where community_name = #{communityName} order by create_date desc;
+    </select>
 </mapper>

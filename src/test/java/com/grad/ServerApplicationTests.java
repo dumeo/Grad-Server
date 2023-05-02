@@ -3,6 +3,7 @@ package com.grad;
 import com.grad.dao.ImageMapper;
 import com.grad.dao.PostMapper;
 import com.grad.dao.UserMapper;
+import com.grad.pojo.User;
 import com.grad.service.PostService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +29,9 @@ class ServerApplicationTests {
 
     @Test
     void contextLoads() throws IOException {
-//        userMapper.addUser(new User("gsdgdrfher", 0, "李四", "gfdbfd", "22222@qq.com",
-//                "武汉社区", "三单元501", "www.ss.com", 0, "2023-03-15 00:45:11"));
-//        User user = userMapper.selectUserById("gsdgdrfher");
+//        userMapper.addUser(new User("gsdgdr\"fher", 0, "李四", "gfdbfd", "22222@qq.com",
+//                "武汉社区", "三单元501", "https://www.nicepng.com/png/detail/804-8049853_med-boukrima-specialist-webmaster-php-e-commerce-web.png", 0, "2023-03-15 00:45:11"));
+//        User user = userMapper.getUserById("gsdgdr\"fher");
 //        System.out.println("get user from mybatis:" + user.toString());
     }
 

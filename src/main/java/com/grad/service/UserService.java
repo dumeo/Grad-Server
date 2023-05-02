@@ -9,6 +9,7 @@ import com.grad.dao.UserMapper;
 import com.grad.dao.bloomfilter.BloomFilter;
 import com.grad.pojo.User;
 import com.grad.ret.committee.NoteItem;
+import com.grad.ret.communitynews.CommunityNews;
 import com.grad.ret.reserve.ReserveItem;
 import com.grad.util.*;
 import jakarta.annotation.Resource;
@@ -156,6 +157,17 @@ public class UserService {
             String resStr = (String) redisTemplate.opsForValue().get(CommitteeConstants.COMM_NEWEST_NOTE_PREFIX + communityName);
             NoteItem res = JsonUtil.jsonToObject(resStr, NoteItem.class);
             return new ResponseEntity<>(res, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+
+    }
+
+    public ResponseEntity<List<CommunityNews>> getCommunityNews(String communityName) {
+        try {
+            List<CommunityNews> communityNewsList = userMapper.getCommunityNews(communityName);
+            return new ResponseEntity<>(communityNewsList, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);

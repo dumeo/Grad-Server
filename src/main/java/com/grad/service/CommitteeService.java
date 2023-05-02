@@ -3,11 +3,13 @@ package com.grad.service;
 import com.grad.constants.CommitteeConstants;
 import com.grad.dao.CommitteeMapper;
 import com.grad.ret.committee.NoteItem;
+import com.grad.ret.communitynews.CommunityNews;
 import com.grad.util.DateUtil;
 import com.grad.util.JsonUtil;
 import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -34,4 +36,27 @@ public class CommitteeService {
     }
 
 
+    public ResponseEntity uploadNews(CommunityNews communityNews) {
+        try{
+            String newsId = UUIDUtil.generateUUID();
+            String createDate = DateUtil.generateDate();
+            communityNews.setNewsId(newsId);
+            communityNews.setCreateDate(createDate);
+            committeeMapper.addNews(communityNews);
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public ResponseEntity increaseNewsViewCnt(String newsId){
+        try {
+            committeeMapper.increaseNewsViewCnt(newsId);
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 }
