@@ -1,5 +1,7 @@
 package com.grad.service;
 
+import com.grad.constants.CommitteeConstants;
+import com.grad.constants.UserConstants;
 import com.grad.dao.CommentMapper;
 import com.grad.dao.UserMapper;
 import com.grad.pojo.Comment;
@@ -12,6 +14,10 @@ import com.grad.constants.DefaultVals;
 import com.grad.util.JsonUtil;
 import com.grad.util.UUIDUtil;
 import jakarta.annotation.Resource;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -24,23 +30,33 @@ public class CommentService {
     CommentMapper commentMapper;
     @Resource
     UserMapper userMapper;
+    @Resource
+    RedisTemplate redisTemplate;
 
 
-    public String addComment(Comment comment){
+    public ResponseEntity<Comment> addComment(Comment comment){
+        //判断用户是否被禁言
+        String uid = comment.getUid();
+        User user = userMapper.getUserById(uid);
+        String email = user.getEmail();
+        Object obj = redisTemplate.opsForValue().get(CommitteeConstants.BAN_USER_PREFIX + email);
+        if(obj != null) return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+
         String commentId = UUIDUtil.generateUUID();
         String commentDate = DateUtil.generateDate();
         comment.setCommentId(commentId);
         comment.setCommentDate(commentDate);
+        //将评论实体内容存入数据库
         try{
             if(comment.getFatherId() != null){
                 commentMapper.addCommentOnFather(comment);
             }
             else commentMapper.addComment(comment);
 
-        return JsonUtil.objectToJson(comment);
+        return new ResponseEntity<>(comment, HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
-            return JsonUtil.objectToJson(new Comment());
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 
@@ -49,6 +65,7 @@ public class CommentService {
         List<Comment> commentList = commentMapper.getCommentsByTime(postId);
         List<Comment> level0Comments = new ArrayList<>();
         List<CommentItem> res = new ArrayList<>();
+        //加载0级评论
         for(Comment comment : commentList){
             if(comment.getFatherId() == null)
                 level0Comments.add(comment);
@@ -58,6 +75,7 @@ public class CommentService {
             String uid = comment.getUid();
             User user = userMapper.getUserById(uid);
             CommentItem commentItem = new CommentItem(comment, user);
+            //以0级评论为根节点构造评论树
             buildSubCommentTree(clientUid, commentItem, commentList);
             res.add(commentItem);
         }
@@ -65,20 +83,29 @@ public class CommentService {
         return JsonUtil.objectToJson(res);
     }
 
-    private void buildSubCommentTree(String clientUid, CommentItem fatherCommentItem, List<Comment> commentList) {
+    private void buildSubCommentTree(String clientUid,
+                                     CommentItem fatherCommentItem,
+                                     List<Comment> commentList) {
         Comment father = fatherCommentItem.getComment();
         if(fatherCommentItem.getClientToThisInfo() == null)
-            fatherCommentItem.setClientToThisInfo(generateClientToThisInfo(clientUid, father.getCommentId()));
+            fatherCommentItem.setClientToThisInfo(generateClientToThisInfo(clientUid,
+                    father.getCommentId()));
         for(Comment comment : commentList){
-            if(comment.getFatherId() != null && comment.getFatherId().equals(father.getCommentId())){
+            //判断评论comment是否是当前评论的子评论
+            if(comment.getFatherId() != null
+                    && comment.getFatherId().equals(father.getCommentId())){
                 String uid = comment.getUid();
                 User user = userMapper.getUserById(uid);
                 CommentItem childCommentItem = new CommentItem(comment, user);
+                //若comment是当前评论的子评论，以comment为根节点进行递归
                 buildSubCommentTree(clientUid, childCommentItem, commentList);
                 if(childCommentItem.getClientToThisInfo() == null){
-                    childCommentItem.setClientToThisInfo(generateClientToThisInfo(clientUid, comment.getCommentId()));
+                    childCommentItem.setClientToThisInfo(generateClientToThisInfo(clientUid,
+                            comment.getCommentId()));
                 }
+                //将comment添加到当前评论的子评论列表
                 fatherCommentItem.getChildComments().add(childCommentItem);
+
                 fatherCommentItem.getChildComments().sort(new Comparator<CommentItem>() {
                     @Override
                     public int compare(CommentItem o1, CommentItem o2) {

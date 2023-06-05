@@ -12,7 +12,7 @@
         select * from user where uid=#{uid};
     </select>
 
-    <select id="getUserByEmail" resultType="User">
+    <select id="getUserByEmail" resultType="com.grad.pojo.User">
         select * from user where email = #{email};
     </select>
 

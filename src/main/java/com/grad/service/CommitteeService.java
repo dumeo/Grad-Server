@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class CommitteeService {
@@ -57,6 +58,17 @@ public class CommitteeService {
         }catch (Exception e){
             e.printStackTrace();
             return new ResponseEntity(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public ResponseEntity banUser(String email, int days) {
+        try {
+            String date = DateUtil.generateDate();
+            redisTemplate.opsForValue().set(CommitteeConstants.BAN_USER_PREFIX + email, date + "=" + days, days, TimeUnit.DAYS);
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.SERVICE_UNAVAILABLE);
         }
     }
 }

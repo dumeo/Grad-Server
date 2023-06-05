@@ -47,8 +47,11 @@ public class UserController {
     @GetMapping("/user/check")
     public ResponseEntity<Status> getUserById(@RequestParam("uid")String uid){
         try{
+            //检测数据库中是否存在用户
             User user = userService.checkUserById(uid);
+            //若不存在，返回失败信息
             if(user != null) return new ResponseEntity<>(new Status(UserConstants.USER_EXISTS), HttpStatus.OK);
+            //若存在，返回成功信息
             return new ResponseEntity<>(new Status(UserConstants.USER_NOT_EXISTS), HttpStatus.OK);
         }catch (Exception e){
             e.printStackTrace();
@@ -58,18 +61,7 @@ public class UserController {
 
     @PostMapping("/user/login")
     public ResponseEntity<User> loginUser(@RequestParam("email")String email, @RequestParam("password")String password){
-
-        try {
-            User user = userService.loginUser(email, password);
-            if(user == null) return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            user.setPassword("");
-            return new ResponseEntity<>(user, HttpStatus.OK);
-        }catch (Exception e){
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
-        }
-
-
+        return userService.loginUser(email, password);
     }
 
     @GetMapping("/user/notes")
@@ -100,6 +92,11 @@ public class UserController {
     @GetMapping("/user/community-news")
     public ResponseEntity<List<CommunityNews>> getCommunityNews(@RequestParam("communityName")String communityName){
         return userService.getCommunityNews(communityName);
+    }
+
+    @PostMapping("/user/check-banned")
+    public ResponseEntity<Status> checkBanned(@RequestParam("email")String email){
+        return userService.checkBanned(email);
     }
 
 }

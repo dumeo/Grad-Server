@@ -64,20 +64,26 @@ public class FileService {
 
         String[] fileAddr = client.upload_file(bytes, extName, null);
         String fileUrl = generateFileUrl(fileAddr);
+        log.info("FileUrl:" + DefaultVals.FILE_SERVER_URL + fileUrl);
         imageMapper.addImage(new ImageItem(1, postId, imgOrder, fileUrl, width, height));
         postMapper.setPostType(postId, DefaultVals.POST_TYPE_IMG);
         ins.close();
         inputStream.close();
+        log.info("Store file ok...");
         return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
     }
 
     //上传图片、视频等，返回url，不将url存入数据库了
+
     public ResponseEntity<String> storeFile(MultipartHttpServletRequest request) {
         try{
             String fileName = request.getPart("file").getSubmittedFileName();
             String extName = fileName.substring(fileName.lastIndexOf('.') + 1);
+            //客户端文件输入流
             InputStream ins = request.getFile("file").getInputStream();
+            //读取输入流
             byte[] bytes = ins.readAllBytes();
+            //将字节流存入fastDFS，并返回文件url
             String[] fileAddr = client.upload_file(bytes, extName, null);
             String fileUrl = generateFileUrl(fileAddr);
             ins.close();

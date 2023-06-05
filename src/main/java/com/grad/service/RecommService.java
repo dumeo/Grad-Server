@@ -9,12 +9,14 @@ import com.grad.dao.bloomfilter.BloomFilter;
 import com.grad.pojo.Post;
 import com.grad.ret.PostItem;
 import jakarta.annotation.Resource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
+@Slf4j
 public class RecommService {
     @Resource
     RedisTemplate redisTemplate;
@@ -38,14 +40,17 @@ public class RecommService {
         if(len == 0){
             return  new ArrayList<>();
         }
+        //查询用户最近浏览过那些信息
         List<Object> objects = redisTemplate.opsForList().range(RecommContants.LIST_VIEW_RECORD_PREFIX + uid, 0, (int) (len - 1));
         List<PostItem> res = new ArrayList<>();
         String bfRecommendedKey = RecommContants.BF_RECOMMENDED_PREFIX + uid;
         String bfViewedKey = RecommContants.BF_VIEW_RECORD_PREFIX + uid;
         for(Object obj : objects){
             String postId = (String) obj;
+            //在信息推荐表中查找于该信息相似的信息
             List<String> recommIds = recommMapper.getPostRecomm(postId);
             for(String recommId : recommIds){
+                //检查该条推荐信息之前是否已经推荐过
                 if(!bloomFilter.contains(bfRecommendedKey, recommId) && !bloomFilter.contains(bfViewedKey, recommId)){
                     Post recommPost = postMapper.getPostById(recommId);
                     res.add(postService.postToPostItem(recommPost));

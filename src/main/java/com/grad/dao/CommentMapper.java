@@ -19,4 +19,7 @@ public interface CommentMapper {
     public void setUserLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId, @Param("likeStatus")int likeStatus);
     public void addUserLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId, @Param("likeStatus")int likeStatus);
     public void deleteUserLikeStatus(@Param("uid")String uid, @Param("commentId")String commentId);
+    public List<Comment> getCommentsByPostId(@Param("postId")String postId);
+    public void deleteCommentById(@Param("commentId")String commentId);
+    public void deleteUserLikeComment(@Param("commentId")String commentId);
 }

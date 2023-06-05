@@ -14,8 +14,6 @@ public interface UserMapper {
     public void addUser(User user);
     public User getUserById(String uid);
     public User getUserByEmail(@Param("email") String email);
-    public void storeUserViewRecord(@Param("uid")String uid, @Param("postId")String postId, @Param("createDate")String createDate);
-    public List<String> getUserViewRecord(@Param("uid")String uid);
     List<NoteItem> getNotes(@Param("communityName")String communityName);
     void readNote(@Param("noteId")String noteId);
     void addReserve(@Param("reserveId")String reserveId, @Param("uid")String uid, @Param("qrUrl")String qrUrl);

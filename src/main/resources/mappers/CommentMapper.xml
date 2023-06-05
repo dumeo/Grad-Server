@@ -46,4 +46,17 @@
         delete from user_like_comment where uid = #{uid} and comment_id = #{commentId};
     </delete>
 
+    <delete id="deleteCommentById">
+        delete from comment where comment_id = @{commentId};
+    </delete>
+
+    <select id="getCommentsByPostId" resultType="Comment">
+        select * from comment_table where post_id = #{postId};
+    </select>
+
+    <delete id="deleteUserLikeComment">
+        delete from user_like_comment where comment_id = #{commentId};
+    </delete>
+
+
 </mapper>

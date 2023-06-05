@@ -1,6 +1,7 @@
 package com.grad;
 
 import com.grad.dao.CollectMapper;
+import com.grad.util.DateUtil;
 import jakarta.annotation.Resource;
 import org.intellij.lang.annotations.RegExp;
 import org.junit.jupiter.api.Test;
@@ -13,6 +14,6 @@ public class CollectTest {
 
     @Test
     public void test(){
-
+        System.out.println("===================" + DateUtil.timeStampToDate(1685635287));
     }
 }

@@ -11,4 +11,5 @@ public interface CollectMapper {
     public void deleteCollect(@Param("uid")String uid, @Param("postId")String postId);
     public Object checkIsCollected(@Param("uid")String uid, @Param("postId")String postId);
     public List<String> getUserPostCollect(@Param("uid")String uid);
+    public void deleteCollectByPostId(@Param("postId")String postId);
 }

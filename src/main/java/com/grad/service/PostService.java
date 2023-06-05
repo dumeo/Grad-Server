@@ -2,23 +2,19 @@ package com.grad.service;
 
 import com.grad.constants.DefaultVals;
 import com.grad.dao.*;
+import com.grad.pojo.Comment;
 import com.grad.ret.*;
 import com.grad.pojo.Post;
 import com.grad.pojo.ImageItem;
 import com.grad.pojo.User;
 import com.grad.util.*;
 import jakarta.annotation.Resource;
-import jakarta.servlet.ServletException;
 import lombok.extern.slf4j.Slf4j;
-import org.csource.common.MyException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +33,12 @@ public class PostService {
     CommentMapper commentMapper;
     @Resource
     CollectMapper collectMapper;
-
+    @Resource
+    KafkaTemplate<String, String> kafkaTemplate;
+    @Resource
+    UserService userService;
+    @Resource
+    RecommMapper recommMapper;
 
 
     public String getPostCommentCnt(String postId){
@@ -47,6 +48,12 @@ public class PostService {
     }
 
     public String getPostById(String clientUid, String postId){
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                userService.storeUserViewRecord(clientUid, postId);
+            }
+        }).start();
         Post post = postMapper.getPostById(postId);
         PostItem postItem = postToPostItem(post);
         ClientToThisInfo clientToThisInfo = generateClientToThisInfo(clientUid, postId);
@@ -86,10 +93,16 @@ public class PostService {
 
 
     public String addPost(Post post){
-        post.setPostId(UUIDUtil.generateUUID());
+        String postId = UUIDUtil.generateUUID();
+        post.setPostId(postId);
         String createDate = DateUtil.generateDate();
         post.setPostDate(createDate);
+        //调用DAO接口存入数据库
         postMapper.addPost(post);
+        //用户自己发布的帖子也需添加到浏览记录
+        userService.storeUserViewRecord(post.getUid(), postId);
+        //将信息ID传入kafka
+        kafkaTemplate.send(DefaultVals.KAFKA_TOPIC, "key", "new post:" + postId);
         return "{\"postId\":" + "\"" + post.getPostId() + "\"" + "}";
     };
 
@@ -162,4 +175,31 @@ public class PostService {
     }
 
 
+    public ResponseEntity<List<Post>> searchPost(String postTitle) {
+        try {
+            List<Post> posts = postMapper.searchPost(postTitle);
+            return new ResponseEntity<>(posts, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
+
+    public ResponseEntity deletePost(String postId) {
+        try {
+            collectMapper.deleteCollectByPostId(postId);
+            List<Comment> commentList = commentMapper.getCommentsByPostId(postId);
+            for(Comment comment : commentList){
+                commentMapper.deleteUserLikeComment(comment.getCommentId());
+                commentMapper.deleteCommentById(comment.getCommentId());
+            }
+            postMapper.deleteUserLikePost(postId);
+            postMapper.deletePostById(postId);
+            recommMapper.deleteRecommendByPostId(postId);
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.OK);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new ResponseEntity(ResponseEntity.EMPTY, HttpStatus.SERVICE_UNAVAILABLE);
+        }
+    }
 }

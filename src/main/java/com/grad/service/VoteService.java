@@ -41,21 +41,22 @@ public class VoteService {
     public String addVote(VoteItem voteItem) throws Exception{
         String createDate = DateUtil.generateDate();
         String endDate = voteItem.getVote().getEndDate();
+        //计算投票有效时间，单位：小时
         long interTime = DateUtil.getDateHourInter(createDate, endDate);
         Vote vote = voteItem.getVote();
         String voteId = UUIDUtil.generateUUID();
         vote.setVoteId(voteId);
         vote.setCreateDate(createDate);
         log.info("vote:" + vote.toString());
+        //将投票实体存入数据库
         voteMapper.addVote(vote);
-        //Padding vote options
         for(VoteOption voteOption : voteItem.getVoteOptions()){
             String optionId = UUIDUtil.generateUUID();
             voteOption.setOptionId(optionId);
             voteOption.setVoteId(voteId);
             voteMapper.addVoteOption(voteOption);
         }
-        //store postId to redis
+        //将投票ID存入Redis
         redisOperator.set("vote:" + voteId, 0, interTime, TimeUnit.HOURS);
         return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_OK));
     }
@@ -65,15 +66,20 @@ public class VoteService {
         Vote vote = voteMapper.getVoteById(voteId);
         List<String> votingIds = redisOperator.getKeys(VoteConstants.REDIS_VOTE_PREFIX);
         if(votingIds.contains(vote.getVoteId())){
+            //如果redis中存在某个投票ID，则标记该投票正在进行
             vote.setVoteStatus(VoteConstants.VOTE_STATUS_VOTING);
         }else{
+            //如果redis中不存在某个投票ID，则标记该投票已结束
             vote.setVoteStatus(VoteConstants.VOTE_STATUS_ENDED);
         }
+        //查询投票参与人数
         Object cntObj = voteMapper.getVoteCntByVoteId(voteId);
         vote.setVoteCnt((cntObj == null ? 0 : (long)cntObj));
         ClientToVoteInfo clientToVoteInfo = generateCTV(clientUid, voteId);
+        //查询该投票下的所有选项
         List<VoteOption> voteOptions = voteMapper.getVoteOptionsByVoteId(voteId);
         for(VoteOption voteOption : voteOptions){
+            //查询每个选项被选次数
             Object cntObj2 = voteMapper.getOptionVotedCnt(voteOption.getOptionId());
             voteOption.setCnt(cntObj2 == null ? 0 : (long)cntObj2);
         }

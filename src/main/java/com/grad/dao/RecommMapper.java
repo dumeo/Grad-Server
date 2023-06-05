@@ -9,4 +9,5 @@ import java.util.List;
 @Mapper
 public interface RecommMapper {
     List<String> getPostRecomm(@Param("postId") String postId);
+    public void deleteRecommendByPostId(@Param("postId")String postId);
 }

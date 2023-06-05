@@ -5,6 +5,7 @@ import com.grad.pojo.Comment;
 import com.grad.service.CommentService;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import retrofit2.http.GET;
 
@@ -17,7 +18,7 @@ public class CommentController {
 
 
     @PostMapping("/comment/add")
-    public String addComment(@RequestBody Comment comment){
+    public ResponseEntity<Comment> addComment(@RequestBody Comment comment){
         return commentService.addComment(comment);
     }
 

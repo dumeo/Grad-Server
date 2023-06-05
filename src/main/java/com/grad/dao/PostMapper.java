@@ -20,4 +20,7 @@ public interface PostMapper {
     public void deleteUserLikeStatus(@Param("uid")String uid, @Param("postId")String postId);
     public List<Post> getPostsByRange(@Param("start")Integer start, @Param("end") Integer end);
     public int getPostTotalCnt();
+    public List<Post> searchPost(@Param("postTitle")String postTitle);
+    public void deleteUserLikePost(@Param("postId")String postId);
+    public void deletePostById(@Param("postId")String postId);
 }

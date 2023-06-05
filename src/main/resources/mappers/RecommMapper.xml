@@ -9,4 +9,8 @@
         select recomm_id from recomm_table where post_id = #{postId};
     </select>
 
+    <delete id="deleteRecommendByPostId">
+        delete from recomm_table where post_id = #{postId} or recomm_id = #{postId};
+    </delete>
+
 </mapper>

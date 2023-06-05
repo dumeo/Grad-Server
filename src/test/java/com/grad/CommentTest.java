@@ -27,10 +27,10 @@ public class CommentTest {
 //                "05b7686a40b5497ab8c9ac7701e85008", "comment test",
 //                0, null, 0, "2023-04-03 12:12:52");
 //        commentMapper.addComment(comment);
-//        List<Comment> comments = commentMapper.getCommentsByTime("05b7686a40b5497ab8c9ac7701e85008");
-//        for(Comment comm : comments){
-//            System.out.println(comm);
-//        }
+        List<Comment> comments = commentMapper.getCommentsByTime("05b7686a40b5497ab8c9ac7701e85008");
+        for(Comment comm : comments){
+            System.out.println(comm);
+        }
 
 //        String res = commentService.getCommentsByPostId("81ada435621f40d2bf6eadbd7cb50303");
 

@@ -37,6 +37,11 @@ public class CommitteeController {
         return committeeService.increaseNewsViewCnt(newsId);
     }
 
+    @PostMapping("/committee/ban-user")
+    public ResponseEntity banUser(@RequestParam("email")String email, @RequestParam("days")int days){
+        return committeeService.banUser(email, days);
+    }
+
 
 
 

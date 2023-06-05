@@ -11,8 +11,12 @@ import com.grad.service.UserService;
 import com.grad.util.JsonUtil;
 import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+
+import java.util.List;
 
 @RestController
 @Slf4j
@@ -27,17 +31,12 @@ public class PostsController {
     BloomFilter bloomFilter;
     @Resource
     FileService fileService;
+    @Resource
+    KafkaTemplate<String, String> kafkaTemplate;
 
     @GetMapping("/post")
-    public String getPostById(@RequestParam("clientUid")String clientUid, @RequestParam("postId")String postId){
-
-       new Thread(new Runnable() {
-           @Override
-           public void run() {
-               userService.storeUserViewRecord(clientUid, postId);
-           }
-       }).start();
-
+    public String getPostById(@RequestParam("clientUid")String clientUid,
+                              @RequestParam("postId")String postId){
         return postService.getPostById(clientUid, postId);
     }
 
@@ -50,7 +49,8 @@ public class PostsController {
     }
 
     @GetMapping("/post/load-more")
-    public String loadMorePosts(@RequestParam("postTag")String postTag, @RequestParam("startTime") String startTime){
+    public String loadMorePosts(@RequestParam("postTag")String postTag,
+                                @RequestParam("startTime") String startTime){
         String json = postService.loadMorePosts(postTag, startTime);
         return json;
     }
@@ -95,6 +95,16 @@ public class PostsController {
             e.printStackTrace();
             return JsonUtil.objectToJson(new Status(DefaultVals.STATUS_FAILED));
         }
+    }
+
+    @GetMapping("/post/search")
+    public ResponseEntity<List<Post>> searchPost(@RequestParam("postTitle")String postTitle){
+        return postService.searchPost(postTitle);
+    }
+
+    @PostMapping("/post/delete-post")
+    public ResponseEntity deletePost(@RequestParam("postId")String postId){
+        return postService.deletePost(postId);
     }
 
 }

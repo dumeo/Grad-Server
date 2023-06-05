@@ -23,4 +23,9 @@
         select id from user_collect_post where uid = #{uid} and post_id = #{postId};
     </select>
 
+    <delete id="deleteCollectByPostId">
+        delete from user_collect_post where post_id = #{postId};
+    </delete>
+
+
 </mapper>

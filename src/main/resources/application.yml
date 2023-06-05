@@ -2,7 +2,7 @@ spring:
   datasource:
     username: root
     password: wjj
-    url: jdbc:mysql://192.168.1.104:3306/grad3?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
+    url: jdbc:mysql://47.109.76.168:3306/grad3?useUnicode=true&characterEncoding=utf-8&useSSL=true&serverTimezone=UTC
     driver-class-name: com.mysql.cj.jdbc.Driver
     hikari:
       max-lifetime: 100
@@ -13,17 +13,34 @@ spring:
 
   data:
     redis:
-      host: 192.168.1.104
+      host: 47.109.76.168
       port: 6379
+
+  kafka:
+    bootstrap-servers: 47.109.76.168:9092
+    producer:
+      retries: 3
+      batch-size: 16384
+      buffer-memory: 33554432
+      acks: 1
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    consumer:
+      group-id: TestGroup
+      enable-auto-commit: false
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    listener:
+      ack-mode: manual_immediate
+
 mybatis:
   mapper-locations: classpath:/mappers/*.xml
   type-aliases-package: com.grad.pojo
   configuration:
     map-underscore-to-camel-case: true
 
-#  spring.servlet.multipart.max-file-size=10MB
-#  spring.servlet.multipart.max-request-size=10MB
-
+#  --------------------------------------------------
 
 
 

@@ -3,8 +3,11 @@ package com.grad.util;
 import lombok.extern.slf4j.Slf4j;
 
 import java.sql.Timestamp;
+import java.text.ParsePosition;
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 @Slf4j
 public class DateUtil {
@@ -38,5 +41,17 @@ public class DateUtil {
         long diff = Math.abs(x2 - x1);
         long diffMinutes = diff / 60;
         return diffMinutes < 60 ? 60 : diffMinutes;
+    }
+
+    public static String timeStampToDate(long ts){
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(ts * 1000));
+    }
+
+    public static long dateToTimeStamp(String date){
+        return (new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")).parse(date, new ParsePosition(0)).getTime() / 1000;
+    }
+
+    public static long getCurrentTimeStamp(){
+        return new Date().getTime() / 1000;
     }
 }
